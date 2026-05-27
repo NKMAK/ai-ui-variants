@@ -21,7 +21,7 @@ Preact + Shadow DOM の overlay を demo-app に注入し、ON/OFF・要素 hove
 
 | # | サブタスク | 状態 | 依存 | 並列可否 | ファイル |
 | --- | --- | --- | --- | --- | --- |
-| 1 | overlay 注入 + Shadow DOM + 足場 + Toggle | 未着手 | Phase 2 | 単独委任可 | [01-injection-shadow-dom.md](01-injection-shadow-dom.md) |
+| 1 | overlay 注入 + Shadow DOM + 足場 + Toggle | 完了 | Phase 2 | 単独委任可 | [01-injection-shadow-dom.md](01-injection-shadow-dom.md) |
 | 2 | Inspector（hover/click）+ source 表示 + start | 未着手 | #1 | 単独委任可 | [02-inspector-source.md](02-inspector-source.md) |
 
 **実行順**: 1 → 2（直列）。#2 は #1 の Shadow DOM・store・api client 基盤に乗る。

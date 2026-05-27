@@ -49,10 +49,10 @@ plugin に overlay バンドルの注入（`transformIndexHtml` + virtual module
 
 ## 完了条件
 
-- [ ] demo-app に overlay `<script>` が注入され Shadow DOM 配下に overlay が出る
-- [ ] toggle で `enabled` が切り替わる
-- [ ] ホスト CSS の影響を受けない（Shadow DOM 隔離）
-- [ ] `pnpm tsc --noEmit` が通り、コミット済み
+- [x] demo-app に overlay `<script>` が注入され Shadow DOM 配下に overlay が出る
+- [x] toggle で `enabled` が切り替わる
+- [x] ホスト CSS の影響を受けない（Shadow DOM 隔離）
+- [x] `pnpm tsc --noEmit` が通り、コミット済み
 
 ## 検証方法
 
