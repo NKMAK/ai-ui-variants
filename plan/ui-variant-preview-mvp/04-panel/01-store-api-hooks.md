@@ -42,10 +42,10 @@ variant 生成・preview 切替・適用・破棄のロジックを、api client
 
 ## 完了条件
 
-- [ ] api client が generate/preview/apply/discard を提供する
-- [ ] `useVariants` が generate/goPrev/goNext/preview/apply/discard を提供する
-- [ ] `busy` による連打ロックが効く（処理中の操作は無視）
-- [ ] `pnpm tsc --noEmit` が通り、コミット済み
+- [x] api client が generate/preview/apply/discard を提供する
+- [x] `useVariants` が generate/goPrev/goNext/preview/apply/discard を提供する
+- [x] `busy` による連打ロックが効く（処理中の操作は無視）
+- [x] `pnpm tsc --noEmit` が通り、コミット済み
 
 ## 検証方法
 

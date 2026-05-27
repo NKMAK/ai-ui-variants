@@ -20,7 +20,7 @@
 
 | # | サブタスク | 状態 | 依存 | 並列可否 | ファイル |
 | --- | --- | --- | --- | --- | --- |
-| 1 | store + api + useVariants（ロジック層） | 未着手 | Phase 3 | 単独委任可 | [01-store-api-hooks.md](01-store-api-hooks.md) |
+| 1 | store + api + useVariants（ロジック層） | 完了 | Phase 3 | 単独委任可 | [01-store-api-hooks.md](01-store-api-hooks.md) |
 | 2 | Panel UI 群 + App 組み込み（e2e） | 未着手 | #1 | 単独委任可 | [02-components.md](02-components.md) |
 
 **実行順**: 1 → 2（直列）。#2 は #1 の `useVariants` と store を UI に結線する。
