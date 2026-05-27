@@ -37,11 +37,11 @@ inspector ON 中の hover 強調（HighlightBox）とクリック捕捉を実装
 
 ## 完了条件
 
-- [ ] hover で対象要素に HighlightBox が重なる
-- [ ] クリックで `file:line:col` が取得・表示される
-- [ ] クリックで session start が呼ばれ `sessionId` が入る
-- [ ] clean 違反（409）がエラー表示される
-- [ ] `pnpm tsc --noEmit` が通り、コミット済み
+- [x] hover で対象要素に HighlightBox が重なる
+- [x] クリックで `file:line:col` が取得・表示される
+- [x] クリックで session start が呼ばれ `sessionId` が入る
+- [x] clean 違反（409）がエラー表示される
+- [x] `pnpm tsc --noEmit` が通り、コミット済み
 
 ## 検証方法
 

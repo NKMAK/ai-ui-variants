@@ -22,7 +22,7 @@ Preact + Shadow DOM の overlay を demo-app に注入し、ON/OFF・要素 hove
 | # | サブタスク | 状態 | 依存 | 並列可否 | ファイル |
 | --- | --- | --- | --- | --- | --- |
 | 1 | overlay 注入 + Shadow DOM + 足場 + Toggle | 完了 | Phase 2 | 単独委任可 | [01-injection-shadow-dom.md](01-injection-shadow-dom.md) |
-| 2 | Inspector（hover/click）+ source 表示 + start | 未着手 | #1 | 単独委任可 | [02-inspector-source.md](02-inspector-source.md) |
+| 2 | Inspector（hover/click）+ source 表示 + start | 完了 | #1 | 単独委任可 | [02-inspector-source.md](02-inspector-source.md) |
 
 **実行順**: 1 → 2（直列）。#2 は #1 の Shadow DOM・store・api client 基盤に乗る。
 
@@ -33,12 +33,12 @@ Preact + Shadow DOM の overlay を demo-app に注入し、ON/OFF・要素 hove
 
 ## フェーズ完了条件
 
-- [ ] demo-app に overlay の `<script>` が注入され、Shadow DOM 配下に overlay が描画される
-- [ ] toggle で inspector の ON/OFF が切り替わる
-- [ ] hover で対象要素に HighlightBox が重なる（ホスト CSS の影響を受けない）
-- [ ] クリックで `data-ui-source` から `file:line:col` が取得・表示される
-- [ ] クリック時に session start が呼ばれ `sessionId` が入る（clean 違反は 409 表示）
-- [ ] `pnpm tsc --noEmit` が通り、各サブタスクがコミットされている
+- [x] demo-app に overlay の `<script>` が注入され、Shadow DOM 配下に overlay が描画される
+- [x] toggle で inspector の ON/OFF が切り替わる
+- [x] hover で対象要素に HighlightBox が重なる（ホスト CSS の影響を受けない）
+- [x] クリックで `data-ui-source` から `file:line:col` が取得・表示される
+- [x] クリック時に session start が呼ばれ `sessionId` が入る（clean 違反は 409 表示）
+- [x] `pnpm tsc --noEmit` が通り、各サブタスクがコミットされている
 
 ## 検証方法（フェーズ結合確認 = #2 完了時）
 

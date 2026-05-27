@@ -2,7 +2,9 @@
 import { render } from "preact";
 
 import { App } from "./App.tsx";
+import inspectorCss from "./components/Inspector/style.css?raw";
 import toggleCss from "./components/InspectorToggle/style.css?raw";
+import sourceLocationCss from "./components/SourceLocation/style.css?raw";
 import themeCss from "./styles/theme.css?raw";
 
 const ROOT_ID = "__ui_agent_root";
@@ -18,7 +20,7 @@ function mountOverlay(): void {
 
   const shadow = host.attachShadow({ mode: "open" });
   const style = document.createElement("style");
-  style.textContent = `${themeCss}\n${toggleCss}`;
+  style.textContent = `${themeCss}\n${inspectorCss}\n${sourceLocationCss}\n${toggleCss}`;
   shadow.appendChild(style);
 
   const appRoot = document.createElement("div");
