@@ -36,10 +36,10 @@
 
 ## 完了条件
 
-- [ ] `paths.ts` が repoRoot 解決とアプリ相対→repo相対変換を提供する
-- [ ] `MockGenerator` が 3 件の `VariantOutput`（search/replace）を返す
-- [ ] `pnpm tsc --noEmit` が通る
-- [ ] コミット済み
+- [x] `paths.ts` が repoRoot 解決とアプリ相対→repo相対変換を提供する
+- [x] `MockGenerator` が 3 件の `VariantOutput`（search/replace）を返す
+- [x] `pnpm tsc --noEmit` が通る
+- [x] コミット済み
 
 ## 検証方法
 

@@ -23,7 +23,7 @@
 
 | # | サブタスク | 状態 | 依存 | 並列可否 | ファイル |
 | --- | --- | --- | --- | --- | --- |
-| 1 | paths + generator(mock) | 未着手 | Phase 1 | 単独委任可 | [01-paths-generator-mock.md](01-paths-generator-mock.md) |
+| 1 | paths + generator(mock) | 完了 | Phase 1 | 単独委任可 | [01-paths-generator-mock.md](01-paths-generator-mock.md) |
 | 2 | snapshot + worktree + patch | 未着手 | #1（paths） | 単独委任可 | [02-snapshot-worktree-patch.md](02-snapshot-worktree-patch.md) |
 | 3 | session + router + plugin entry | 未着手 | #1, #2 | 単独委任可（結線） | [03-session-router-plugin.md](03-session-router-plugin.md) |
 
