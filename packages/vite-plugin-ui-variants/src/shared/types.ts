@@ -20,6 +20,13 @@ export type VariantOutput = {
   changes: FileChange[];
 };
 
+export type UiVariantGeneratorKind = "mock" | "claude-code";
+
+export type UiVariantsOptions = {
+  appRoot?: string;
+  generator?: UiVariantGeneratorKind;
+};
+
 export type VariantStatus =
   | "pending"
   | "ready"

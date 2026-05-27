@@ -3,7 +3,8 @@ import path from "node:path";
 import type { IndexHtmlTransformResult, Plugin } from "vite";
 
 import { API_BASE } from "./constants.ts";
-import { createRouter, type UiVariantsOptions } from "./server/router.ts";
+import { createRouter } from "./server/router.ts";
+import type { UiVariantsOptions } from "./shared/types.ts";
 
 export type { UiVariantsOptions };
 

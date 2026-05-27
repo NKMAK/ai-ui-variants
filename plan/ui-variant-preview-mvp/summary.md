@@ -42,7 +42,7 @@
 | 2 | Local Agent Server + plugin middleware | 完了 | [02-server/](02-server/summary.md) |
 | 3 | Overlay 注入 + Inspector（クリック→source 表示） | 完了 | [03-overlay/](03-overlay/summary.md) |
 | 4 | Panel 操作フロー（生成→切替→適用/破棄） | 完了 | [04-panel/](04-panel/summary.md) |
-| 5 | 本番 generator（Claude Code headless） | 未着手 | [05-claude-code-generator.md](05-claude-code-generator.md) |
+| 5 | 本番 generator（Claude Code headless） | 完了 | [05-claude-code-generator.md](05-claude-code-generator.md) |
 
 積み上げ構造: **shared → server → client(inspector) → client(panel) → 本番 generator 差し替え**。Phase 4 までで mock による体験を完成させ、Phase 5 で generator を Claude Code headless に差し替える（interface は不変）。各フェーズ末に独立して検証できるマイルストーンを置く。
 
@@ -67,15 +67,15 @@
 
 ## 完了条件
 
-- [ ] `pnpm install` が通り、`pnpm --filter demo-app dev` で demo-app が起動する
-- [ ] 各パッケージで `pnpm tsc --noEmit` が型エラーなく通る
-- [ ] ブラウザで overlay を ON にし、要素を hover で強調・クリックで source location を表示できる
-- [ ] 指示入力 → Variant A/B/C（mock）が生成され、patch が `git diff` で作られ検証を通る
-- [ ] 「前へ / 次へ」で main worktree のファイルが切り替わり、HMR で画面が更新され、form 入力など in-memory state が保たれる
-- [ ] 「適用」で選んだ patch だけが残り、「破棄」で base snapshot に戻る
-- [ ] 完全寄り制約（対象ファイルに未コミット変更があれば start 拒否）と単一セッション排他が機能する
-- [ ] Claude Code headless generator（`claude -p`）が指示から実際に Variant A/B/C（search/replace）を返し、patch 化・検証・preview まで通る
-- [ ] 各フェーズの変更がコミットされている
+- [x] `pnpm install` が通り、`pnpm --filter demo-app dev` で demo-app が起動する
+- [x] 各パッケージで `pnpm tsc --noEmit` が型エラーなく通る
+- [x] ブラウザで overlay を ON にし、要素を hover で強調・クリックで source location を表示できる
+- [x] 指示入力 → Variant A/B/C（mock）が生成され、patch が `git diff` で作られ検証を通る
+- [x] 「前へ / 次へ」で main worktree のファイルが切り替わり、HMR で画面が更新され、form 入力など in-memory state が保たれる
+- [x] 「適用」で選んだ patch だけが残り、「破棄」で base snapshot に戻る
+- [x] 完全寄り制約（対象ファイルに未コミット変更があれば start 拒否）と単一セッション排他が機能する
+- [x] Claude Code headless generator（`claude -p`）が指示から実際に Variant A/B/C（search/replace）を返し、patch 化・検証・preview まで通る
+- [x] 各フェーズの変更がコミットされている
 
 ## 後続候補
 

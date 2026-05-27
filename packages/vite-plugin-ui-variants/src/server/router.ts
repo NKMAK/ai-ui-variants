@@ -14,8 +14,10 @@ import type {
   Session,
   SourceLocation,
   StartSessionResponse,
+  UiVariantsOptions,
   Variant,
 } from "../shared/types.ts";
+import { ClaudeCodeGenerator } from "./generator/claude-code.ts";
 import { MockGenerator } from "./generator/mock.ts";
 import type { VariantGenerator } from "./generator/types.ts";
 import { applyPatch, validatePatch } from "./patch.ts";
@@ -37,11 +39,6 @@ import {
   removeWorktrees,
 } from "./worktree.ts";
 
-export type UiVariantsOptions = {
-  appRoot?: string;
-  generator?: VariantGenerator;
-};
-
 type NextFunction = (error?: unknown) => void;
 type Handler = (req: IncomingMessage, res: ServerResponse, next: NextFunction) => void;
 
@@ -55,7 +52,7 @@ export function createRouter(
   const appRoot = options.appRoot ?? server.config.root;
   const repoRoot = resolveRepoRoot(appRoot);
   const context: SessionContext = { appRoot, repoRoot };
-  const generator = options.generator ?? new MockGenerator();
+  const generator = createGenerator(options.generator ?? "mock", repoRoot);
 
   return (req, res, next) => {
     void handleRequest(req, res, context, generator).catch((error: unknown) => {
@@ -77,6 +74,17 @@ export function createRouter(
       next(error);
     });
   };
+}
+
+function createGenerator(
+  generator: UiVariantsOptions["generator"],
+  repoRoot: string,
+): VariantGenerator {
+  if (generator === "claude-code") {
+    return new ClaudeCodeGenerator({ cwd: repoRoot });
+  }
+
+  return new MockGenerator();
 }
 
 async function handleRequest(
