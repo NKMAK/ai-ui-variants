@@ -47,11 +47,11 @@
 
 `02-server/summary.md` の「フェーズ完了条件」を全て満たす:
 
-- [ ] start の clean チェック（409）・単一セッション排他（409）
-- [ ] generate で 3 案・patch 生成・検証（denylist/数/行数で `failed`）
-- [ ] preview で対象ファイル書換・HMR 発火
-- [ ] apply で patch 残存＋worktree 掃除 / discard で base 復元＋掃除
-- [ ] `pnpm tsc --noEmit` が通り、コミット済み
+- [x] start の clean チェック（409）・単一セッション排他（409）
+- [x] generate で 3 案・patch 生成・検証（denylist/数/行数で `failed`）
+- [x] preview で対象ファイル書換・HMR 発火
+- [x] apply で patch 残存＋worktree 掃除 / discard で base 復元＋掃除
+- [x] `pnpm tsc --noEmit` が通り、コミット済み
 
 ## 検証方法
 

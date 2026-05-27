@@ -2,8 +2,8 @@ import { execFileSync } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
-import type { FileChange, FileEdit } from "../shared/types";
-import { uiAgentDir, worktreeDir } from "./paths";
+import type { FileChange, FileEdit } from "../shared/types.ts";
+import { uiAgentDir, worktreeDir } from "./paths.ts";
 
 export function createWorktrees(
   repoRoot: string,

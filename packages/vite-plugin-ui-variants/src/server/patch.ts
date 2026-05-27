@@ -1,7 +1,7 @@
 import { execFileSync } from "node:child_process";
 import path from "node:path";
 
-import { DENYLIST, MAX_DIFF_LINES, MAX_FILES } from "../constants";
+import { DENYLIST, MAX_DIFF_LINES, MAX_FILES } from "../constants.ts";
 
 export type PatchValidationResult =
   | {

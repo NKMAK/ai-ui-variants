@@ -25,7 +25,7 @@
 | --- | --- | --- | --- | --- | --- |
 | 1 | paths + generator(mock) | 完了 | Phase 1 | 単独委任可 | [01-paths-generator-mock.md](01-paths-generator-mock.md) |
 | 2 | snapshot + worktree + patch | 完了 | #1（paths） | 単独委任可 | [02-snapshot-worktree-patch.md](02-snapshot-worktree-patch.md) |
-| 3 | session + router + plugin entry | 未着手 | #1, #2 | 単独委任可（結線） | [03-session-router-plugin.md](03-session-router-plugin.md) |
+| 3 | session + router + plugin entry | 完了 | #1, #2 | 単独委任可（結線） | [03-session-router-plugin.md](03-session-router-plugin.md) |
 
 **実行順**: 1 → 2 → 3（直列）。#2 は #1 の `paths.ts`、#3 は #1/#2 の全関数に依存するため並列はしない。各サブタスクは単独で subagent に委任でき、完了ごとに tsc → コミット。
 
@@ -37,13 +37,13 @@
 
 ## フェーズ完了条件
 
-- [ ] `POST /session/start` が clean 時に成功し、未コミット変更がある対象ファイルでは 409 で拒否される
-- [ ] アクティブセッション中の 2 件目 start が排他で拒否される
-- [ ] `generate-variants` が 3 案を返し、各 patch が `.ui-agent/sessions/<sid>/patches/` に生成される
-- [ ] denylist 該当・ファイル数超過・行数超過の patch が `failed` になる
-- [ ] `preview` で demo-app の対象ファイルが書き換わり、HMR が発火する
-- [ ] `apply` で選択 patch が残り worktree が掃除される / `discard` で base に戻る
-- [ ] `pnpm tsc --noEmit` が通り、各サブタスクがコミットされている
+- [x] `POST /session/start` が clean 時に成功し、未コミット変更がある対象ファイルでは 409 で拒否される
+- [x] アクティブセッション中の 2 件目 start が排他で拒否される
+- [x] `generate-variants` が 3 案を返し、各 patch が `.ui-agent/sessions/<sid>/patches/` に生成される
+- [x] denylist 該当・ファイル数超過・行数超過の patch が `failed` になる
+- [x] `preview` で demo-app の対象ファイルが書き換わり、HMR が発火する
+- [x] `apply` で選択 patch が残り worktree が掃除される / `discard` で base に戻る
+- [x] `pnpm tsc --noEmit` が通り、各サブタスクがコミットされている
 
 ## 検証方法（フェーズ結合確認 = サブタスク #3 完了時）
 

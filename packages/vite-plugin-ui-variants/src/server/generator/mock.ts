@@ -1,5 +1,5 @@
-import type { VariantOutput } from "../../shared/types";
-import type { GenerateVariantsInput, VariantGenerator } from "./types";
+import type { VariantOutput } from "../../shared/types.ts";
+import type { GenerateVariantsInput, VariantGenerator } from "./types.ts";
 
 export class MockGenerator implements VariantGenerator {
   async generate(input: GenerateVariantsInput): Promise<VariantOutput[]> {

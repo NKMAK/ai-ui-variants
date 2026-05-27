@@ -1,4 +1,4 @@
-import type { SourceLocation, VariantOutput } from "../../shared/types";
+import type { SourceLocation, VariantOutput } from "../../shared/types.ts";
 
 export type CodeRange = {
   file: string;

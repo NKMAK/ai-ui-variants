@@ -32,6 +32,9 @@ importers:
       vite:
         specifier: ^7.0.0
         version: 7.3.3(@types/node@25.9.1)
+      vite-plugin-ui-variants:
+        specifier: workspace:*
+        version: link:../../packages/vite-plugin-ui-variants
     devDependencies:
       '@types/react':
         specifier: ^19.1.6
