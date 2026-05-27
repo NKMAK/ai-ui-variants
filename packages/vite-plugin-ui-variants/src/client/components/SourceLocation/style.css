@@ -12,6 +12,17 @@
   pointer-events: auto;
 }
 
+.source-location.is-embedded {
+  position: static;
+  width: auto;
+  padding: 0 0 12px;
+  border: 0;
+  border-bottom: 1px solid var(--ui-agent-border);
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+}
+
 .source-location__label {
   color: var(--ui-agent-text-muted);
   font-size: 11px;

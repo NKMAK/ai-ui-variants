@@ -5,7 +5,11 @@ import {
   sessionId,
 } from "../../store/overlayStore.ts";
 
-export function SourceLocation() {
+type SourceLocationProps = {
+  embedded?: boolean;
+};
+
+export function SourceLocation({ embedded = false }: SourceLocationProps) {
   const source = selectedSource.value;
 
   if (source === null) {
@@ -16,7 +20,10 @@ export function SourceLocation() {
   const error = sessionError.value;
 
   return (
-    <section className="source-location" aria-live="polite">
+    <section
+      className={embedded ? "source-location is-embedded" : "source-location"}
+      aria-live="polite"
+    >
       <div className="source-location__label">Selected source</div>
       <div className="source-location__path">
         {source.file}:{source.line}:{source.column}

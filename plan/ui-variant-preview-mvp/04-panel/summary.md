@@ -21,7 +21,7 @@
 | # | サブタスク | 状態 | 依存 | 並列可否 | ファイル |
 | --- | --- | --- | --- | --- | --- |
 | 1 | store + api + useVariants（ロジック層） | 完了 | Phase 3 | 単独委任可 | [01-store-api-hooks.md](01-store-api-hooks.md) |
-| 2 | Panel UI 群 + App 組み込み（e2e） | 未着手 | #1 | 単独委任可 | [02-components.md](02-components.md) |
+| 2 | Panel UI 群 + App 組み込み（e2e） | 完了 | #1 | 単独委任可 | [02-components.md](02-components.md) |
 
 **実行順**: 1 → 2（直列）。#2 は #1 の `useVariants` と store を UI に結線する。
 
@@ -32,12 +32,12 @@
 
 ## フェーズ完了条件
 
-- [ ] クリック後、指示入力 →「生成」で Variant A/B/C が表示される
-- [ ] 「次へ / 前へ」で main worktree のファイルが切り替わり HMR で画面更新される
-- [ ] 切替中も demo-app の `<input>` の値（in-memory state）が保たれる
-- [ ] 連打しても逐次化され壊れない（`busy` 中の操作が無視される）
-- [ ] 「適用」で選んだ変更だけが残り、「破棄」で base に戻る（`git status` clean）
-- [ ] `pnpm tsc --noEmit` が通り、各サブタスクがコミットされている
+- [x] クリック後、指示入力 →「生成」で Variant A/B/C が表示される
+- [x] 「次へ / 前へ」で main worktree のファイルが切り替わり HMR で画面更新される
+- [x] 切替中も demo-app の `<input>` の値（in-memory state）が保たれる
+- [x] 連打しても逐次化され壊れない（`busy` 中の操作が無視される）
+- [x] 「適用」で選んだ変更だけが残り、「破棄」で base に戻る（`git status` clean）
+- [x] `pnpm tsc --noEmit` が通り、各サブタスクがコミットされている
 
 ## 検証方法（フェーズ結合確認 = #2 完了時）
 

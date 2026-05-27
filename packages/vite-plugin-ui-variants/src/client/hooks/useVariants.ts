@@ -143,6 +143,8 @@ async function discard(): Promise<void> {
   const activeSessionId = sessionId.value;
 
   if (activeSessionId === null) {
+    sessionError.value = null;
+    selectedSource.value = null;
     resetVariantState();
     return;
   }
