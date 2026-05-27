@@ -42,12 +42,12 @@ base snapshot の保存/復元、git worktree への変更後コード書込と 
 
 ## 完了条件
 
-- [ ] `saveSnapshot` / `restoreSnapshot` がファイル内容を Record で往復できる
-- [ ] `createWorktrees` → `applyChangesAndDiff` → `removeWorktrees` で patch 文字列が得られる
-- [ ] search 不一致のとき variant を失敗にできる戻り（エラー or 空）になっている
-- [ ] `validatePatch` が denylist / ファイル数 / 行数で NG を返す
-- [ ] `applyPatch` が patch を main worktree に当てられる
-- [ ] `pnpm tsc --noEmit` が通り、コミット済み
+- [x] `saveSnapshot` / `restoreSnapshot` がファイル内容を Record で往復できる
+- [x] `createWorktrees` → `applyChangesAndDiff` → `removeWorktrees` で patch 文字列が得られる
+- [x] search 不一致のとき variant を失敗にできる戻り（エラー or 空）になっている
+- [x] `validatePatch` が denylist / ファイル数 / 行数で NG を返す
+- [x] `applyPatch` が patch を main worktree に当てられる
+- [x] `pnpm tsc --noEmit` が通り、コミット済み
 
 ## 検証方法
 

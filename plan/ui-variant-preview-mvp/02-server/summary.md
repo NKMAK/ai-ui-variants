@@ -24,7 +24,7 @@
 | # | サブタスク | 状態 | 依存 | 並列可否 | ファイル |
 | --- | --- | --- | --- | --- | --- |
 | 1 | paths + generator(mock) | 完了 | Phase 1 | 単独委任可 | [01-paths-generator-mock.md](01-paths-generator-mock.md) |
-| 2 | snapshot + worktree + patch | 未着手 | #1（paths） | 単独委任可 | [02-snapshot-worktree-patch.md](02-snapshot-worktree-patch.md) |
+| 2 | snapshot + worktree + patch | 完了 | #1（paths） | 単独委任可 | [02-snapshot-worktree-patch.md](02-snapshot-worktree-patch.md) |
 | 3 | session + router + plugin entry | 未着手 | #1, #2 | 単独委任可（結線） | [03-session-router-plugin.md](03-session-router-plugin.md) |
 
 **実行順**: 1 → 2 → 3（直列）。#2 は #1 の `paths.ts`、#3 は #1/#2 の全関数に依存するため並列はしない。各サブタスクは単独で subagent に委任でき、完了ごとに tsc → コミット。
