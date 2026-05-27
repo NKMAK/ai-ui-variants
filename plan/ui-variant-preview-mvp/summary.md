@@ -38,7 +38,7 @@
 
 | # | フェーズ名 | 状態 | 詳細ファイル |
 | --- | --- | --- | --- |
-| 1 | モノレポ足場 + shared + demo-app | 未着手 | [01-scaffold-shared-demo.md](01-scaffold-shared-demo.md) |
+| 1 | モノレポ足場 + shared + demo-app | 完了 | [01-scaffold-shared-demo.md](01-scaffold-shared-demo.md) |
 | 2 | Local Agent Server + plugin middleware | 未着手 | [02-server/](02-server/summary.md) |
 | 3 | Overlay 注入 + Inspector（クリック→source 表示） | 未着手 | [03-overlay/](03-overlay/summary.md) |
 | 4 | Panel 操作フロー（生成→切替→適用/破棄） | 未着手 | [04-panel/](04-panel/summary.md) |

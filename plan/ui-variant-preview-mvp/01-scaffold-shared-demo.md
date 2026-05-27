@@ -61,11 +61,11 @@ pnpm workspace の足場・共有型/定数・デモアプリを用意し、`pnp
 
 ## 完了条件
 
-- [ ] `pnpm install` が成功する
-- [ ] `pnpm --filter demo-app dev` で SaveButton と input が表示される
-- [ ] SaveButton の DOM に正しい `data-ui-source` が付いている（DevTools で確認）
-- [ ] `shared/types.ts` / `constants.ts` が `pnpm tsc --noEmit` を通る
-- [ ] demo-app と足場が clean な状態でコミットされている
+- [x] `pnpm install` が成功する
+- [x] `pnpm --filter demo-app dev` で SaveButton と input が表示される
+- [x] SaveButton の DOM に正しい `data-ui-source` が付いている（DevTools で確認）
+- [x] `shared/types.ts` / `constants.ts` が `pnpm tsc --noEmit` を通る
+- [x] demo-app と足場が clean な状態でコミットされている
 
 ## 検証方法
 
