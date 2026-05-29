@@ -9,7 +9,7 @@ export function VariantViewer() {
   if (currentVariant === null) {
     return (
       <section className="variant-viewer" aria-live="polite">
-        <div className="variant-viewer__empty">Variant 未生成</div>
+        <div className="variant-viewer__empty">No variants yet</div>
       </section>
     );
   }
@@ -41,7 +41,7 @@ function VariantNav() {
           void variants.goPrev();
         }}
       >
-        ← 前へ
+        Previous
       </Button>
       <Button
         variant="ghost"
@@ -50,7 +50,7 @@ function VariantNav() {
           void variants.goNext();
         }}
       >
-        次へ →
+        Next
       </Button>
     </div>
   );

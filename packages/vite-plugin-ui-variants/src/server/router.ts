@@ -8,6 +8,8 @@ import type {
   ApiErrorResponse,
   ApplyVariantResponse,
   DiscardSessionResponse,
+  GenerateMode,
+  GenerateVariantsRequest,
   GenerateVariantsResponse,
   GetSessionResponse,
   PreviewVariantResponse,
@@ -20,26 +22,33 @@ import type {
 import { ClaudeCodeGenerator } from "./generator/claude-code.ts";
 import { MockGenerator } from "./generator/mock.ts";
 import type { VariantGenerator } from "./generator/types.ts";
-import { applyPatch, validatePatch } from "./patch.ts";
+import { applyPatch, applyPatchContent, validatePatch } from "./patch.ts";
 import { patchesDir, resolveRepoRoot, worktreeDir } from "./paths.ts";
 import {
   ConflictError,
   NotFoundError,
   getActiveSession,
   persistSession,
+  refreshSessionCodeRange,
   releaseSession,
   restoreSessionSnapshot,
   startSession,
   withSessionLock,
   type SessionContext,
+  type SessionState,
 } from "./session.ts";
-import { applyChangesAndDiff, createWorktrees, removeWorktrees } from "./worktree.ts";
+import {
+  applyChangesAndDiff,
+  createWorktrees,
+  removePatches,
+  removeWorktrees,
+} from "./worktree.ts";
 
 type NextFunction = (error?: unknown) => void;
 type Handler = (req: IncomingMessage, res: ServerResponse, next: NextFunction) => void;
 
 type StartBody = SourceLocation | { source: SourceLocation };
-type GenerateBody = { instruction?: string; count?: number };
+type GenerateBody = Partial<GenerateVariantsRequest>;
 
 export function createRouter(
   server: ViteDevServer,
@@ -127,12 +136,14 @@ async function handleRequest(
   ) {
     const sessionId = requiredSegment(segments[1], "sessionId");
     const body = await readJsonBody<GenerateBody>(req);
+    const generateBody = normalizeGenerateBody(body);
     const session = await generateVariants(
       context,
       generator,
       sessionId,
-      body.instruction ?? "",
-      body.count ?? 3,
+      generateBody.instruction,
+      generateBody.count,
+      generateBody.mode,
     );
     sendJson<GenerateVariantsResponse>(res, 200, {
       ok: true,
@@ -203,72 +214,109 @@ async function generateVariants(
   sessionId: string,
   instruction: string,
   count: number,
+  mode: GenerateMode,
 ): Promise<Session> {
   return withSessionLock(context, sessionId, async (state) => {
     state.session.status = "generating";
     state.session.instruction = instruction;
     persistSession(context.repoRoot, state.session);
 
-    const outputs = await generator.generate({
-      instruction,
-      selectedSource: {
-        ...state.session.source,
-        file: state.repoRelFiles[0] ?? state.session.source.file,
-      },
-      codeRange: state.codeRange,
-      count,
-    });
-    const variants: Variant[] = outputs.map((output, index) => ({
-      ...output,
-      id: `variant-${index + 1}`,
-      status: "pending",
-    }));
+    try {
+      const seedPatch = prepareGenerationBase(context, state, mode);
+      const outputs = await generator.generate({
+        instruction,
+        selectedSource: {
+          ...state.session.source,
+          file: state.repoRelFiles[0] ?? state.session.source.file,
+        },
+        codeRange: state.codeRange,
+        count,
+      });
+      const variants: Variant[] = outputs.map((output, index) => ({
+        ...output,
+        id: `variant-${index + 1}`,
+        status: "pending",
+      }));
 
-    createWorktrees(
-      context.repoRoot,
-      sessionId,
-      variants.map((variant) => variant.id),
-    );
-    fs.mkdirSync(patchesDir(context.repoRoot, sessionId), { recursive: true });
+      createWorktrees(
+        context.repoRoot,
+        sessionId,
+        variants.map((variant) => variant.id),
+        seedPatch,
+      );
+      fs.mkdirSync(patchesDir(context.repoRoot, sessionId), { recursive: true });
 
-    for (const variant of variants) {
-      try {
-        const patch = applyChangesAndDiff(
-          context.repoRoot,
-          worktreeDir(context.repoRoot, sessionId, variant.id),
-          variant.changes,
-        );
-        const patchPath = path.join(
-          patchesDir(context.repoRoot, sessionId),
-          `${variant.id}.patch`,
-        );
-        fs.writeFileSync(patchPath, patch, "utf8");
+      for (const variant of variants) {
+        try {
+          const patch = applyChangesAndDiff(
+            context.repoRoot,
+            worktreeDir(context.repoRoot, sessionId, variant.id),
+            variant.changes,
+          );
+          const patchPath = path.join(
+            patchesDir(context.repoRoot, sessionId),
+            `${variant.id}.patch`,
+          );
+          fs.writeFileSync(patchPath, patch, "utf8");
 
-        const validation = validatePatch(patch);
+          const validation = validatePatch(patch);
 
-        if (validation.ok) {
-          variant.status = "ready";
-          variant.patchPath = patchPath;
-        } else {
+          if (validation.ok) {
+            variant.status = "ready";
+            variant.patchPath = patchPath;
+          } else {
+            variant.status = "failed";
+            variant.error = validation.reason;
+          }
+        } catch (error: unknown) {
           variant.status = "failed";
-          variant.error = validation.reason;
+          variant.error =
+            error instanceof Error ? error.message : "Unknown variant error.";
         }
-      } catch (error: unknown) {
-        variant.status = "failed";
-        variant.error =
-          error instanceof Error ? error.message : "Unknown variant error.";
       }
-    }
 
-    state.session.variants = variants;
-    state.session.currentIndex = -1;
-    state.session.status = variants.some((variant) => variant.status === "ready")
-      ? "ready"
-      : "failed";
-    persistSession(context.repoRoot, state.session);
+      state.session.variants = variants;
+      state.session.currentIndex = -1;
+      state.session.status = variants.some((variant) => variant.status === "ready")
+        ? "ready"
+        : "failed";
+      persistSession(context.repoRoot, state.session);
+    } catch (error: unknown) {
+      state.session.status = "failed";
+      persistSession(context.repoRoot, state.session);
+      throw error;
+    }
 
     return state.session;
   });
+}
+
+function prepareGenerationBase(
+  context: SessionContext,
+  state: SessionState,
+  mode: GenerateMode,
+): string | undefined {
+  if (mode === "replace") {
+    restoreSessionSnapshot(context, state);
+    removeWorktrees(context.repoRoot, state.session.id);
+    removePatches(context.repoRoot, state.session.id);
+    refreshSessionCodeRange(context, state);
+    return undefined;
+  }
+
+  const variant = getReadyOrPreviewingVariant(
+    state.session,
+    requiredCurrentVariantId(state.session),
+  );
+  const seedPatch = fs.readFileSync(requiredPatchPath(variant), "utf8");
+
+  restoreSessionSnapshot(context, state);
+  applyPatchContent(context.repoRoot, seedPatch);
+  refreshSessionCodeRange(context, state);
+  removeWorktrees(context.repoRoot, state.session.id);
+  removePatches(context.repoRoot, state.session.id);
+
+  return seedPatch;
 }
 
 async function previewVariant(
@@ -389,6 +437,16 @@ function requiredPatchPath(variant: Variant): string {
   return variant.patchPath;
 }
 
+function requiredCurrentVariantId(session: Session): string {
+  const variant = session.variants[session.currentIndex];
+
+  if (variant === undefined) {
+    throw new ConflictError("No current variant to refine.");
+  }
+
+  return variant.id;
+}
+
 function getPathSegments(req: IncomingMessage): string[] {
   const url = new URL(req.url ?? "/", "http://localhost");
   return url.pathname.split("/").filter(Boolean);
@@ -421,6 +479,24 @@ function normalizeStartBody(body: StartBody): SourceLocation {
   }
 
   return source;
+}
+
+function normalizeGenerateBody(body: GenerateBody): {
+  instruction: string;
+  count: number;
+  mode: GenerateMode;
+} {
+  const mode = body.mode ?? "replace";
+
+  if (mode !== "replace" && mode !== "refine") {
+    throw new Error("Invalid generate mode.");
+  }
+
+  return {
+    instruction: body.instruction ?? "",
+    count: body.count ?? 3,
+    mode,
+  };
 }
 
 async function readJsonBody<T>(req: IncomingMessage): Promise<T> {

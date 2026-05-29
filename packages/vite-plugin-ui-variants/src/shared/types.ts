@@ -21,6 +21,7 @@ export type VariantOutput = {
 };
 
 export type UiVariantGeneratorKind = "mock" | "claude-code";
+export type GenerateMode = "replace" | "refine";
 
 export type UiVariantsOptions = {
   appRoot?: string;
@@ -76,6 +77,9 @@ export type StartSessionResponse = {
 
 export type GenerateVariantsRequest = {
   sessionId: string;
+  instruction: string;
+  count?: number;
+  mode?: GenerateMode;
 };
 
 export type GenerateVariantsResponse = {

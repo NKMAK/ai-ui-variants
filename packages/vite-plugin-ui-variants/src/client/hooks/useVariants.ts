@@ -1,4 +1,4 @@
-import type { Variant } from "../../shared/types.ts";
+import type { GenerateMode, Variant } from "../../shared/types.ts";
 import { postApply, postDiscard, postGenerate, postPreview } from "../api/client.ts";
 import {
   busy,
@@ -19,7 +19,12 @@ export type UseVariantsResult = {
   busy: boolean;
   canGoPrev: boolean;
   canGoNext: boolean;
-  generate: (instruction: string, count?: number) => Promise<void>;
+  hasVariants: boolean;
+  canRegenerate: boolean;
+  canRefineCurrent: boolean;
+  generateInitial: (instruction: string, count?: number) => Promise<void>;
+  regenerate: (instruction: string, count?: number) => Promise<void>;
+  refineCurrent: (instruction: string, count?: number) => Promise<void>;
   goPrev: () => Promise<void>;
   goNext: () => Promise<void>;
   preview: (variantId: string) => Promise<void>;
@@ -40,7 +45,16 @@ export function useVariants(): UseVariantsResult {
     busy: isBusy,
     canGoPrev: findPreviewableIndex(variantList, activeIndex, -1) !== null,
     canGoNext: findPreviewableIndex(variantList, activeIndex, 1) !== null,
-    generate,
+    hasVariants: variantList.length > 0,
+    canRegenerate: sessionId.value !== null && !isBusy,
+    canRefineCurrent:
+      sessionId.value !== null &&
+      !isBusy &&
+      activeVariant !== null &&
+      isPreviewable(activeVariant),
+    generateInitial: generateReplace,
+    regenerate: generateReplace,
+    refineCurrent: generateRefine,
     goPrev,
     goNext,
     preview,
@@ -49,9 +63,24 @@ export function useVariants(): UseVariantsResult {
   };
 }
 
-async function generate(
+async function generateReplace(
   instruction: string,
   count = DEFAULT_VARIANT_COUNT,
+): Promise<void> {
+  await generate(instruction, "replace", count);
+}
+
+async function generateRefine(
+  instruction: string,
+  count = DEFAULT_VARIANT_COUNT,
+): Promise<void> {
+  await generate(instruction, "refine", count);
+}
+
+async function generate(
+  instruction: string,
+  mode: GenerateMode,
+  count: number,
 ): Promise<void> {
   const activeSessionId = sessionId.value;
 
@@ -61,7 +90,7 @@ async function generate(
   }
 
   await runExclusive(async () => {
-    const response = await postGenerate(activeSessionId, instruction, count);
+    const response = await postGenerate(activeSessionId, instruction, count, mode);
 
     if (!response.ok) {
       sessionError.value = response.error;
