@@ -20,7 +20,23 @@ export function InstructionInput() {
       return;
     }
 
-    void variants.generate(trimmedInstruction);
+    submitInstruction(event, () => variants.generateInitial(trimmedInstruction));
+  };
+
+  const handleRegenerate = (event: Event): void => {
+    if (disabled || !variants.canRegenerate) {
+      return;
+    }
+
+    submitInstruction(event, () => variants.regenerate(trimmedInstruction));
+  };
+
+  const handleRefine = (event: Event): void => {
+    if (disabled || !variants.canRefineCurrent) {
+      return;
+    }
+
+    submitInstruction(event, () => variants.refineCurrent(trimmedInstruction));
   };
 
   return (
@@ -39,11 +55,57 @@ export function InstructionInput() {
         }}
       />
       <div className="instruction-input__actions">
-        <Button variant="primary" type="submit" disabled={disabled}>
-          {variants.busy ? <Spinner /> : null}
-          生成
-        </Button>
+        {variants.hasVariants ? (
+          <>
+            <Button
+              variant="ghost"
+              disabled={disabled || !variants.canRegenerate}
+              onClick={handleRegenerate}
+            >
+              Regenerate
+            </Button>
+            <Button
+              variant="primary"
+              disabled={disabled || !variants.canRefineCurrent}
+              onClick={handleRefine}
+            >
+              {variants.busy ? <Spinner /> : null}
+              Refine current
+            </Button>
+          </>
+        ) : (
+          <Button variant="primary" type="submit" disabled={disabled}>
+            {variants.busy ? <Spinner /> : null}
+            Generate
+          </Button>
+        )}
       </div>
     </form>
   );
+}
+
+function submitInstruction(event: Event, action: () => Promise<void>): void {
+  const form = event.currentTarget;
+
+  if (!(form instanceof HTMLFormElement || form instanceof HTMLButtonElement)) {
+    return;
+  }
+
+  const root = form.getRootNode();
+
+  void action().finally(() => {
+    blurActiveElement(root);
+  });
+}
+
+function blurActiveElement(root: Node): void {
+  if (!(root instanceof Document || root instanceof ShadowRoot)) {
+    return;
+  }
+
+  const activeElement = root.activeElement;
+
+  if (activeElement instanceof HTMLElement) {
+    activeElement.blur();
+  }
 }

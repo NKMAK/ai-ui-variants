@@ -15,7 +15,7 @@ export function PanelActions() {
           void variants.apply();
         }}
       >
-        この案を適用
+        Apply current
       </Button>
       <Button
         variant="ghost"
@@ -24,7 +24,7 @@ export function PanelActions() {
           void variants.discard();
         }}
       >
-        破棄
+        Discard
       </Button>
     </div>
   );

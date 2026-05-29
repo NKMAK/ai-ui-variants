@@ -3,6 +3,7 @@ import type {
   ApplyVariantResponse,
   ApiResponse,
   DiscardSessionResponse,
+  GenerateMode,
   GenerateVariantsResponse,
   PreviewVariantResponse,
   SourceLocation,
@@ -24,10 +25,11 @@ export async function postGenerate(
   activeSessionId: string,
   instruction: string,
   count: number,
+  mode: GenerateMode,
 ): Promise<ApiResponse<GenerateVariantsResponse>> {
   return postJson<ApiResponse<GenerateVariantsResponse>>(
     `${API_ENDPOINTS.session}/${activeSessionId}/generate-variants`,
-    { instruction, count },
+    { instruction, count, mode },
   );
 }
 

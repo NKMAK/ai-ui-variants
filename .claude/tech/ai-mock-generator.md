@@ -1,9 +1,9 @@
-# AI Patch Generator（mockから開始）
+# AI Patch Generator
 
 ## 役割
 
 instruction + code context を受け取り、**Variant A/B/Cの「変更後コード」**を返すモジュール。
-MVPでは固定patchを返すmockにし、後でClaude APIに差し替える。
+MVPの初期段階では固定patchを返すmockから始め、現在は `mock` と `claude-code` を plugin option で切り替える。
 
 ## なぜmockから始めるか
 
@@ -15,6 +15,25 @@ MVPでは固定patchを返すmockにし、後でClaude APIに差し替える。
 
 - unified diffは行番号・context行のズレでLLMが最も間違える（仕様の設計判断5）。
 - AIは**変更後コード**（全文 or 検索置換ブロック）を返す。**patch化（`git diff`）はサーバ側**が決定論的に行う（[git-worktree.md](git-worktree.md)）。
+
+## Claude Code generator
+
+本番寄りの generator は `src/server/generator/claude-code.ts`。ローカルの Claude Code CLI を headless 実行し、Claude には tools を渡さず、search/replace JSON だけを返させる。
+
+- 実行コマンド: `claude -p <prompt> --output-format json --allowedTools "" --model <model>`
+- 既定 model: `claude-haiku-4-5`
+- model override: `UI_VARIANTS_CLAUDE_MODEL`
+- prompt assembly: `src/server/generator/prompt.ts`
+- package default prompt: `src/server/generator/default-prompt.md`
+- host app prompt override: plugin option `promptTemplatePath`
+- host app context追加: plugin option `promptContextPaths`
+
+demo app では次のファイルを Claude Code generator に渡す。
+
+- `.ui-variants/claude-code-prompt.md`
+- `.ui-variants/project-context.md`
+
+UI変更案は text / label / props / className / size など、同一ファイル・構造を壊さない範囲に限定する。import追加・hooks構造変更・別ファイル波及は Fast Refresh の状態維持を壊しやすいため禁止寄りに扱う。
 
 ## interfaceと型
 
@@ -46,7 +65,8 @@ interface VariantGenerator {
 ```
 
 - `mock.ts`: 固定のA/B/C（文言変更 / className追加 など）を返す。
-- 将来 `claude.ts`: Claude API（claude-opus等）で同interfaceを実装。
+- `claude-code.ts`: Claude Code headless でA/B/Cを生成する。既定 model は `claude-haiku-4-5`。
+- 将来候補 `claude.ts`: Claude APIで同interfaceを実装。
 
 ## patch検証（generatorの後段・server責務）
 

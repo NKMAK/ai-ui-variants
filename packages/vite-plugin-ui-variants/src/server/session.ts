@@ -104,6 +104,25 @@ export function restoreSessionSnapshot(
   restoreSnapshot(context.repoRoot, state.session.baseSnapshot);
 }
 
+export function refreshSessionCodeRange(
+  context: SessionContext,
+  state: SessionState,
+): CodeRange {
+  const repoRelFile = state.repoRelFiles[0];
+
+  if (repoRelFile === undefined) {
+    throw new ConflictError("Session has no target file.");
+  }
+
+  state.codeRange = extractCodeRange(
+    context.repoRoot,
+    repoRelFile,
+    state.session.source.line,
+  );
+
+  return state.codeRange;
+}
+
 export function releaseSession(sessionId: string): void {
   if (activeSession?.session.id === sessionId) {
     activeSession = null;

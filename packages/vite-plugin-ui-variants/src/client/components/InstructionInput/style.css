@@ -36,6 +36,8 @@
 }
 
 .instruction-input__actions {
-  display: flex;
-  justify-content: flex-end;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(126px, max-content));
+  justify-content: end;
+  gap: 8px;
 }

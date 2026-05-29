@@ -3,12 +3,14 @@ import fs from "node:fs";
 import path from "node:path";
 
 import type { FileChange, FileEdit } from "../shared/types.ts";
-import { uiAgentDir, worktreeDir } from "./paths.ts";
+import { patchesDir, uiAgentDir, worktreeDir } from "./paths.ts";
+import { applyPatchContent } from "./patch.ts";
 
 export function createWorktrees(
   repoRoot: string,
   sid: string,
   variantIds: string[],
+  seedPatch?: string,
 ): void {
   for (const variantId of variantIds) {
     const targetDir = worktreeDir(repoRoot, sid, variantId);
@@ -16,6 +18,10 @@ export function createWorktrees(
     execFileSync("git", ["-C", repoRoot, "worktree", "add", targetDir, "HEAD"], {
       stdio: "pipe",
     });
+
+    if (seedPatch !== undefined) {
+      applyPatchContent(targetDir, seedPatch);
+    }
   }
 }
 
@@ -59,10 +65,24 @@ export function removeWorktrees(repoRoot: string, sid: string): void {
       continue;
     }
 
-    execFileSync("git", ["-C", repoRoot, "worktree", "remove", "--force", targetDir], {
-      stdio: "pipe",
-    });
+    try {
+      execFileSync(
+        "git",
+        ["-C", repoRoot, "worktree", "remove", "--force", targetDir],
+        {
+          stdio: "pipe",
+        },
+      );
+    } catch {
+      fs.rmSync(targetDir, { recursive: true, force: true });
+    }
   }
+
+  fs.rmSync(sessionWorktreeDir, { recursive: true, force: true });
+}
+
+export function removePatches(repoRoot: string, sid: string): void {
+  fs.rmSync(patchesDir(repoRoot, sid), { recursive: true, force: true });
 }
 
 function applyEdits(content: string, edits: FileEdit[]): string {

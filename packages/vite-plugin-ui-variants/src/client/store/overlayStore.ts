@@ -5,6 +5,7 @@ import type { SourceLocation, Variant } from "../../shared/types.ts";
 export const enabled = signal(false);
 export const selectedSource = signal<SourceLocation | null>(null);
 export const hoveredRect = signal<DOMRect | null>(null);
+export const selectedRect = signal<DOMRect | null>(null);
 export const sessionId = signal<string | null>(null);
 export const sessionError = signal<string | null>(null);
 export const variants = signal<Variant[]>([]);

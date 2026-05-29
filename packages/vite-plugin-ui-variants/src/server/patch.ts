@@ -70,6 +70,13 @@ export function applyPatch(repoRoot: string, patchPath: string): void {
   });
 }
 
+export function applyPatchContent(repoRoot: string, patch: string): void {
+  execFileSync("git", ["-C", repoRoot, "apply", "-"], {
+    input: patch,
+    stdio: "pipe",
+  });
+}
+
 function countChangedLines(patch: string): number {
   return patch
     .split("\n")

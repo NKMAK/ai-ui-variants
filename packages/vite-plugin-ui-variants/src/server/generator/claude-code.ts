@@ -6,7 +6,7 @@ import type { GenerateVariantsInput, VariantGenerator } from "./types.ts";
 
 const CLAUDE_TIMEOUT_MS = 180_000;
 const CLAUDE_MAX_BUFFER = 1024 * 1024 * 10;
-const DEFAULT_CLAUDE_MODEL = "claude-sonnet-4-6";
+const DEFAULT_CLAUDE_MODEL = "claude-haiku-4-5";
 const CLAUDE_MODEL_ENV = "UI_VARIANTS_CLAUDE_MODEL";
 
 type ClaudeCodeGeneratorOptions = {
