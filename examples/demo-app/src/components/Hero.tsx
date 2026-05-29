@@ -20,11 +20,12 @@ export function Hero() {
           <button
             type="button"
             className="cta cta-primary"
+            style={{ background: 'linear-gradient(135deg, #1a0020 0%, #2d0040 100%)', color: '#ff00ff', boxShadow: '0 0 15px #ff00ff, 0 0 30px #ff00ff, 0 0 60px rgba(255,0,255,0.5), inset 0 0 20px rgba(255,0,255,0.1)', border: '2px solid #ff00ff', fontFamily: 'monospace', letterSpacing: '0.2em', textTransform: 'uppercase', textShadow: '0 0 8px #ff00ff' }}
             data-ui-source="src/components/Hero.tsx:20:11"
           >
-            Install the plugin
+            ⚡ BOOT SEQUENCE
             <span className="arrow" aria-hidden>
-              →
+              ◈
             </span>
           </button>
           <button
