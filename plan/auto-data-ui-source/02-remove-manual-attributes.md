@@ -45,10 +45,10 @@ demo app の手書き `data-ui-source` を削除し、自動注入だけで over
 
 ## 完了条件
 
-- [ ] demo component ソースに手書き `data-ui-source` 属性が残っていない。
-- [ ] demo の画面文言が手書き属性を正として説明していない。
-- [ ] mock generator が手書き `data-ui-source` を含む search/replace に依存していない。
-- [ ] 自動注入後も overlay が source location を取得できる。
+- [x] demo component ソースに手書き `data-ui-source` 属性が残っていない。
+- [x] demo の画面文言が手書き属性を正として説明していない。
+- [x] mock generator が手書き `data-ui-source` を含む search/replace に依存していない（code range から動的に search/replace を作る形へ書き換え済み）。
+- [x] 自動注入後も overlay が source location を取得できる（transformed module で `data-ui-source` が intrinsic element に付くことを curl で確認）。
 
 ## 検証方法
 

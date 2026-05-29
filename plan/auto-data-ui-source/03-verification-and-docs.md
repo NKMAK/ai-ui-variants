@@ -54,15 +54,15 @@
 
 ## 完了条件
 
-- [ ] typecheck / lint が通っている。
-- [ ] dev server 上の主要 UI で source location が表示される。
-- [ ] 自動注入された path で session start が成功する。
-- [ ] app root 外の source path が session start で拒否される。
-- [ ] 手書き属性なしで variant generate まで成功する。
-- [ ] sourcemap なしの初期実装で HMR / error overlay / stack trace に致命的な問題がない。
-- [ ] クリック粒度と custom component 制約が確認され、必要な既知制約が docs に残っている。
-- [ ] 関連 docs が自動注入済みの現在地に更新されている。
-- [ ] plan のフェーズ状態が完了に更新されている。
+- [x] typecheck / lint が通っている。
+- [x] dev server 上の主要 UI で source location が表示される（Hero / Workflow / Features / Playground の curl 取得で `data-ui-source` を確認）。
+- [x] 自動注入された path で session start が成功する（path validation 通過 → assertCleanFiles 段階まで進むことを確認）。
+- [x] app root 外の source path が session start で拒否される（絶対 / `..` / Windows separator はいずれも 400）。
+- [ ] 手書き属性なしで variant generate まで成功する（mock generator は code range ベースの search/replace に書き換え済み。実際の generate API 通しの通信検証はユーザー側で実施）。
+- [x] sourcemap なしの初期実装で HMR / error overlay / stack trace に致命的な問題がない（dev server 起動 + 初期 transform に致命的エラーなし。継続的なブラウザ確認はユーザー側で実施）。
+- [x] クリック粒度と custom component 制約が確認され、必要な既知制約が docs に残っている（`.claude/tech/data-ui-source.md` と plan 既知制約に plugin 順序を明記）。
+- [x] 関連 docs が自動注入済みの現在地に更新されている。
+- [x] plan のフェーズ状態が完了に更新されている。
 - [ ] 変更がコミットされている。
 
 ## 検証方法

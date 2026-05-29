@@ -2,22 +2,23 @@ export function Features() {
   return (
     <section className="band" id="features">
       <p className="section-eyebrow">// features</p>
-      <h2 className="section-title" data-ui-source="src/components/Features.tsx:5:9">
+      <h2 className="section-title">
         Built for the loop between <em>idea</em> and <em>diff</em>.
       </h2>
       <div className="features-grid">
-        <article className="feature" data-ui-source="src/components/Features.tsx:9:9">
+        <article className="feature">
           <span className="feature-num">F · 01</span>
           <h3>
             Source-aware <em>by construction</em>
           </h3>
           <p>
-            Every editable element carries data-ui-source. The overlay sends the
-            smallest possible code range — not the whole file, not the whole screen.
+            The dev plugin tags JSX with source metadata automatically. The overlay
+            sends the smallest possible code range — not the whole file, not the whole
+            screen.
           </p>
-          <span className="feature-tag">data-ui-source</span>
+          <span className="feature-tag">auto source metadata</span>
         </article>
-        <article className="feature" data-ui-source="src/components/Features.tsx:20:9">
+        <article className="feature">
           <span className="feature-num">F · 02</span>
           <h3>Code-backed variants</h3>
           <p>
@@ -26,7 +27,7 @@ export function Features() {
           </p>
           <span className="feature-tag">git diff · search/replace</span>
         </article>
-        <article className="feature" data-ui-source="src/components/Features.tsx:29:9">
+        <article className="feature">
           <span className="feature-num">F · 03</span>
           <h3>Worktree-safe</h3>
           <p>
@@ -35,7 +36,7 @@ export function Features() {
           </p>
           <span className="feature-tag">git worktree</span>
         </article>
-        <article className="feature" data-ui-source="src/components/Features.tsx:38:9">
+        <article className="feature">
           <span className="feature-num">F · 04</span>
           <h3>
             Fast Refresh <em>keeps the state</em>

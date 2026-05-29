@@ -18,6 +18,49 @@ export function appToRepoPath(
   return path.relative(repoRoot, absoluteAppFile);
 }
 
+export class SourcePathError extends Error {}
+
+export function assertSafeAppRelPath(
+  appRel: string,
+  appRoot: string,
+  repoRoot: string,
+): void {
+  if (typeof appRel !== "string" || appRel.length === 0) {
+    throw new SourcePathError("Source path is empty.");
+  }
+
+  if (path.isAbsolute(appRel)) {
+    throw new SourcePathError(`Source path must be app-relative: ${appRel}`);
+  }
+
+  if (appRel.includes("\\")) {
+    throw new SourcePathError(`Source path must use POSIX separators: ${appRel}`);
+  }
+
+  const normalizedAppRoot = path.resolve(appRoot);
+  const normalizedRepoRoot = path.resolve(repoRoot);
+  const absoluteAppFile = path.resolve(normalizedAppRoot, appRel);
+  const appRelative = path.relative(normalizedAppRoot, absoluteAppFile);
+
+  if (
+    appRelative === "" ||
+    appRelative.startsWith("..") ||
+    path.isAbsolute(appRelative)
+  ) {
+    throw new SourcePathError(`Source path escapes app root: ${appRel}`);
+  }
+
+  const repoRelative = path.relative(normalizedRepoRoot, absoluteAppFile);
+
+  if (
+    repoRelative === "" ||
+    repoRelative.startsWith("..") ||
+    path.isAbsolute(repoRelative)
+  ) {
+    throw new SourcePathError(`Source path escapes repo root: ${appRel}`);
+  }
+}
+
 export function uiAgentDir(repoRoot: string): string {
   return path.join(repoRoot, UI_AGENT_DIR);
 }

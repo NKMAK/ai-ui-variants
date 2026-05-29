@@ -108,6 +108,16 @@ Webアプリ上のUIをクリックし、そのソースコード位置を特定
 - `const` を使う。
 - server/client 共有の型・定数は `src/shared/` に集約する（整合性のため）。
 
+## TODO（テスト・e2e 整備）
+
+core になりうる挙動はまだ自動テストがない。後続で固定する：
+
+- `data-ui-source` の Vite `transform` hook 自動注入（intrinsic only / 大文字 custom 非対象 / 既存属性二重化なし / overlay TSX 非対象）。
+- `transform/path.ts` の app root / `/@fs/` / query 正規化と除外ロジック。
+- server 側 `assertSafeAppRelPath`（絶対 / `..` / Windows separator / repo root 外を拒否）。
+- `uiVariants()` が `react()` より配列前に並ぶ必要があるという plugin 順序制約の回帰検知。
+- session start → generate → preview → apply の e2e フロー（mock generator で十分）。
+
 ## このツール固有の不変条件（実装時に必ず守る）
 
 仕様 v2 の確定設計判断。実装でこれを崩さないこと：

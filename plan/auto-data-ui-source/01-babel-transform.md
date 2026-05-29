@@ -50,13 +50,17 @@
 
 ## 完了条件
 
-- [ ] `.tsx` / `.jsx` の小文字 JSX 要素に `data-ui-source` が自動注入される。
-- [ ] 大文字 custom component には注入されない。
-- [ ] 既存の手書き `data-ui-source` は二重化されない。
-- [ ] host app root 外の TSX / JSX、特に plugin overlay 側の Preact TSX には注入されない。
-- [ ] 自動注入される path は POSIX の app root 相対で、絶対パス・`..`・OS依存 separator を含まない。
-- [ ] server 側で app root 外の source path が拒否される。
-- [ ] TypeScript compile error がない。
+- [x] `.tsx` / `.jsx` の小文字 JSX 要素に `data-ui-source` が自動注入される。
+- [x] 大文字 custom component には注入されない。
+- [x] 既存の手書き `data-ui-source` は二重化されない。
+- [x] host app root 外の TSX / JSX、特に plugin overlay 側の Preact TSX には注入されない。
+- [x] 自動注入される path は POSIX の app root 相対で、絶対パス・`..`・OS依存 separator を含まない。
+- [x] server 側で app root 外の source path が拒否される（400 + SourcePathError）。
+- [x] TypeScript compile error がない。
+
+## 既知制約
+
+- `@vitejs/plugin-react` の transform plugin も `enforce: "pre"` を持つため、`uiVariants()` は `react()` よりも **配列前** に並べる必要がある。順序が逆だと React Fast Refresh preamble の分だけ行番号がズレる（`.claude/tech/vite.md` に明記）。
 
 ## 検証方法
 
