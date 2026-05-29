@@ -27,6 +27,8 @@ Rules:
 - Use search/replace edits only. Do not output diffs.
 - The search text must be copied exactly from the provided code range.
 - Each search text must appear uniquely in the provided code range.
+- The change MUST target the `selectedLine` in the code range. If the `selectedLine` itself has no editable text/props/className, expand outward by at most 2 lines (selectedLine +/- 2). Lines outside this window MUST NOT be modified.
+- Even when the user instruction is ambiguous (e.g. "make the text smaller and orange"), interpret it as applying to the `selectedLine` only. Never apply it to headings, paragraphs, or props located further away in the code range.
 - Keep changes small and safe for Fast Refresh.
 - Only change text, labels, props, className, or size-like values.
 - Do not add imports.
