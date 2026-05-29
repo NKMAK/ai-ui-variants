@@ -52,7 +52,7 @@ export function createRouter(
   const appRoot = options.appRoot ?? server.config.root;
   const repoRoot = resolveRepoRoot(appRoot);
   const context: SessionContext = { appRoot, repoRoot };
-  const generator = createGenerator(options.generator ?? "mock", repoRoot);
+  const generator = createGenerator(options, repoRoot);
 
   return (req, res, next) => {
     void handleRequest(req, res, context, generator).catch((error: unknown) => {
@@ -77,11 +77,15 @@ export function createRouter(
 }
 
 function createGenerator(
-  generator: UiVariantsOptions["generator"],
+  options: UiVariantsOptions,
   repoRoot: string,
 ): VariantGenerator {
-  if (generator === "claude-code") {
-    return new ClaudeCodeGenerator({ cwd: repoRoot });
+  if (options.generator === "claude-code") {
+    return new ClaudeCodeGenerator({
+      cwd: repoRoot,
+      promptTemplatePath: options.promptTemplatePath,
+      promptContextPaths: options.promptContextPaths,
+    });
   }
 
   return new MockGenerator();

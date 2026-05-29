@@ -25,6 +25,8 @@ export type UiVariantGeneratorKind = "mock" | "claude-code";
 export type UiVariantsOptions = {
   appRoot?: string;
   generator?: UiVariantGeneratorKind;
+  promptTemplatePath?: string;
+  promptContextPaths?: string[];
 };
 
 export type VariantStatus =

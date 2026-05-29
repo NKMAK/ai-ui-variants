@@ -6,20 +6,34 @@ import type { GenerateVariantsInput, VariantGenerator } from "./types.ts";
 
 const CLAUDE_TIMEOUT_MS = 180_000;
 const CLAUDE_MAX_BUFFER = 1024 * 1024 * 10;
+const DEFAULT_CLAUDE_MODEL = "claude-sonnet-4-6";
+const CLAUDE_MODEL_ENV = "UI_VARIANTS_CLAUDE_MODEL";
 
 type ClaudeCodeGeneratorOptions = {
   cwd: string;
+  promptTemplatePath?: string;
+  promptContextPaths?: string[];
 };
 
 export class ClaudeCodeGenerator implements VariantGenerator {
   readonly #cwd: string;
+  readonly #promptTemplatePath: string | undefined;
+  readonly #promptContextPaths: string[];
+  readonly #model: string;
 
   constructor(options: ClaudeCodeGeneratorOptions) {
     this.#cwd = options.cwd;
+    this.#promptTemplatePath = options.promptTemplatePath;
+    this.#promptContextPaths = options.promptContextPaths ?? [];
+    this.#model = resolveClaudeModel();
   }
 
   async generate(input: GenerateVariantsInput): Promise<VariantOutput[]> {
-    const prompt = buildPrompt(input);
+    const prompt = await buildPrompt(input, {
+      cwd: this.#cwd,
+      promptTemplatePath: this.#promptTemplatePath,
+      promptContextPaths: this.#promptContextPaths,
+    });
     const { stdout } = await this.#runClaude(prompt);
     const resultText = extractClaudeResult(stdout);
     const parsed = parseVariantOutputs(resultText);
@@ -35,15 +49,28 @@ export class ClaudeCodeGenerator implements VariantGenerator {
   }
 
   async #runClaude(prompt: string): Promise<{ stdout: string }> {
-    return runClaudeProcess(prompt, this.#cwd);
+    return runClaudeProcess(prompt, this.#cwd, this.#model);
   }
 }
 
-function runClaudeProcess(prompt: string, cwd: string): Promise<{ stdout: string }> {
+function runClaudeProcess(
+  prompt: string,
+  cwd: string,
+  model: string,
+): Promise<{ stdout: string }> {
   return new Promise((resolve, reject) => {
     const child = spawn(
         "claude",
-        ["-p", prompt, "--output-format", "json", "--allowedTools", ""],
+        [
+          "-p",
+          prompt,
+          "--output-format",
+          "json",
+          "--allowedTools",
+          "",
+          "--model",
+          model,
+        ],
         {
           cwd,
           stdio: ["ignore", "pipe", "pipe"],
@@ -102,6 +129,14 @@ function runClaudeProcess(prompt: string, cwd: string): Promise<{ stdout: string
       fn(value);
     }
   });
+}
+
+function resolveClaudeModel(): string {
+  const envModel = process.env[CLAUDE_MODEL_ENV]?.trim();
+
+  return envModel === undefined || envModel.length === 0
+    ? DEFAULT_CLAUDE_MODEL
+    : envModel;
 }
 
 function extractClaudeResult(stdout: string): string {
