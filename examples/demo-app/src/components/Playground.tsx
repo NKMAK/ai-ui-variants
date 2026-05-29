@@ -12,15 +12,15 @@ export function Playground() {
             className="section-title"
             data-ui-source="src/components/Playground.tsx:11:11"
           >
-            This page <em>is</em> the demo.
+            Try it <em>on this very page</em>.
           </h2>
           <p
             className="section-lead"
             data-ui-source="src/components/Playground.tsx:17:11"
           >
-            Run it locally with the overlay on, then click any of the highlighted
-            elements. The scratchpad below stays as you switch variants — Fast Refresh
-            hot-swaps the module instead of remounting it.
+            Clone the repo, run <code>pnpm --filter demo-app dev</code>, and turn the
+            overlay on. Then click any of the elements listed below — variants will land
+            right here, in the page you are reading.
           </p>
           <ul>
             <li>Hero headline · rewrite the lead.</li>

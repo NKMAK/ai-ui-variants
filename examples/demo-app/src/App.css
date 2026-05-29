@@ -619,6 +619,16 @@ button {
   color: rgba(242, 238, 229, 0.78);
 }
 
+.section-lead code {
+  font-family: var(--mono);
+  font-size: 0.9em;
+  background: var(--paper-warm);
+  padding: 2px 8px;
+  border-radius: 2px;
+  color: var(--vermillion-deep);
+  letter-spacing: 0;
+}
+
 /* ============ Workflow ============ */
 
 .steps {
