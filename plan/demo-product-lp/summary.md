@@ -29,7 +29,7 @@
 - LP の表示文言はすべて英語にする。OSS として海外ユーザーに伝えることを優先する。
 - LP はこのプロダクト自体を紹介する。中心メッセージは `Click UI. Generate code-backed variants. Preview and pick one.` に寄せる。
 - 画面は「実際の編集対象」として作る。Hero、CTA、feature cards、workflow、demo panel、waitlist/contact form など、クリックして variant を作りたくなる単位に `data-ui-source` を付ける。
-- `data-ui-source` は demo 専用に手書きする。値は `src/...` のアプリルート相対にする。
+- `data-ui-source` は demo 専用に手書きする。値は `src/...` のアプリルート相対にする。 **※本計画完了後、`plan/auto-data-ui-source/` で手書きは廃止し、`uiVariants()` plugin が dev 時に自動注入する形に置き換えた。**
 - Fast Refresh の状態維持デモのため、email input や small note input など in-memory state を残す。
 - variant が安全に当たりやすいよう、主要 UI は同一ファイル内の text / className / props / style token 変更で完結する粒度にする。
 - GitHub Pages 公開は static build を前提にする。ただし overlay / local agent は dev server 用なので、公開 LP では overlay の操作までは提供しない。公開 LP は product introduction、local dev は editable demo という役割分担にする。
@@ -54,7 +54,7 @@
 ## 完了条件
 
 - [x] `examples/demo-app` が英語の product landing page として成立している。
-- [x] LP 内の主要な編集対象に `data-ui-source` が付いている（Masthead / Hero / PreviewCard / Workflow / Features / Playground / Footer の各コンポーネント）。
+- [x] LP 内の主要な編集対象に `data-ui-source` が付いている（Masthead / Hero / PreviewCard / Workflow / Features / Playground / Footer の各コンポーネント）。**※その後 `plan/auto-data-ui-source/` で手書きは廃止し、dev plugin による自動注入へ移行している。**
 - [x] 入力欄などの state を保持したまま variant preview できる確認用 UI が残っている（`Playground.tsx` の email input、`PreviewCard.tsx` の active variant）。
 - [x] `pnpm --filter demo-app build` が通る。
 - [ ] `pnpm --filter demo-app dev` で overlay から LP 要素を選択できる（ブラウザ確認はユーザー側で実施）。

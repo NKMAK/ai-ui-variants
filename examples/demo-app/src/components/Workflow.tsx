@@ -3,19 +3,19 @@ export function Workflow() {
     <section className="band deep" id="workflow">
       <div className="deep-inner">
         <p className="section-eyebrow">// workflow</p>
-        <h2 className="section-title" data-ui-source="src/components/Workflow.tsx:6:9">
+        <h2 className="section-title">
           Four steps, <em>one screen</em>, zero context switches.
         </h2>
         <ol className="steps">
-          <li className="step" data-ui-source="src/components/Workflow.tsx:10:11">
+          <li className="step">
             <span className="step-num">01</span>
             <h3>Click</h3>
             <p>
-              Pick a button, a heading, a card. The overlay reads{" "}
-              <code>data-ui-source</code> and resolves the exact file and line.
+              Pick a button, a heading, a card. The dev plugin auto-injects source
+              metadata so the overlay can resolve the exact file and line.
             </p>
           </li>
-          <li className="step" data-ui-source="src/components/Workflow.tsx:18:11">
+          <li className="step">
             <span className="step-num">02</span>
             <h3>Generate</h3>
             <p>
@@ -23,7 +23,7 @@ export function Workflow() {
               variants — text, className, props only.
             </p>
           </li>
-          <li className="step" data-ui-source="src/components/Workflow.tsx:26:11">
+          <li className="step">
             <span className="step-num">03</span>
             <h3>Preview</h3>
             <p>
@@ -31,7 +31,7 @@ export function Workflow() {
               screen in place — your input state stays put.
             </p>
           </li>
-          <li className="step" data-ui-source="src/components/Workflow.tsx:34:11">
+          <li className="step">
             <span className="step-num">04</span>
             <h3>Apply</h3>
             <p>

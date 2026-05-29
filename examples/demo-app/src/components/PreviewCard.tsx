@@ -33,7 +33,6 @@ export function PreviewCard() {
           <button
             type="button"
             className={`mock-cta mock-cta-${active.toLowerCase()}`}
-            data-ui-source="src/components/PreviewCard.tsx:33:11"
           >
             {variantCopy[active]}
           </button>

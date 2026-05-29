@@ -7,11 +7,11 @@ const isPages = process.env.GITHUB_PAGES === "true";
 export default defineConfig({
   base: isPages ? "/ai-ui-variants/" : "/",
   plugins: [
-    react(),
     uiVariants({
       generator: "claude-code",
       promptTemplatePath: ".ui-variants/claude-code-prompt.md",
       promptContextPaths: [".ui-variants/project-context.md"],
     }),
+    react(),
   ],
 });

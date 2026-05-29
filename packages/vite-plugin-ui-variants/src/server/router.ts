@@ -23,7 +23,7 @@ import { ClaudeCodeGenerator } from "./generator/claude-code.ts";
 import { MockGenerator } from "./generator/mock.ts";
 import type { VariantGenerator } from "./generator/types.ts";
 import { applyPatch, applyPatchContent, validatePatch } from "./patch.ts";
-import { patchesDir, resolveRepoRoot, worktreeDir } from "./paths.ts";
+import { SourcePathError, patchesDir, resolveRepoRoot, worktreeDir } from "./paths.ts";
 import {
   ConflictError,
   NotFoundError,
@@ -68,6 +68,11 @@ export function createRouter(
 
       if (error instanceof NotFoundError) {
         sendJson(res, 404, { ok: false, error: error.message });
+        return;
+      }
+
+      if (error instanceof SourcePathError) {
+        sendJson(res, 400, { ok: false, error: error.message });
         return;
       }
 

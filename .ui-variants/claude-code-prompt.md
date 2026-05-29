@@ -32,6 +32,7 @@ Rules:
 - Do not add imports.
 - Do not change hooks, component structure, function signatures, data flow, or other files.
 - Do not invent design system APIs.
+- Do not reference `data-ui-source` attributes in search or replace text. They are injected by the dev plugin and never appear in the source files.
 - If a safe variant cannot be produced, return fewer variants.
 
 Additional project context:

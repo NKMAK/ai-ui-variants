@@ -8,16 +8,10 @@ export function Playground() {
       <div className="playground-grid">
         <div className="playground-copy">
           <p className="section-eyebrow">// playground</p>
-          <h2
-            className="section-title"
-            data-ui-source="src/components/Playground.tsx:11:11"
-          >
+          <h2 className="section-title">
             Try it <em>on this very page</em>.
           </h2>
-          <p
-            className="section-lead"
-            data-ui-source="src/components/Playground.tsx:17:11"
-          >
+          <p className="section-lead">
             Clone the repo, run <code>pnpm --filter demo-app dev</code>, and turn the
             overlay on. Then click any of the elements listed below — variants will land
             right here, in the page you are reading.

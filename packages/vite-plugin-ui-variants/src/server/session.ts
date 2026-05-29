@@ -5,7 +5,7 @@ import { randomUUID } from "node:crypto";
 
 import type { SourceLocation, Session } from "../shared/types.ts";
 import type { CodeRange } from "./generator/types.ts";
-import { appToRepoPath, sessionDir } from "./paths.ts";
+import { appToRepoPath, assertSafeAppRelPath, sessionDir } from "./paths.ts";
 import { restoreSnapshot, saveSnapshot } from "./snapshot.ts";
 
 export type SessionContext = {
@@ -45,6 +45,7 @@ export function startSession(
     throw new ConflictError("Another session is already active.");
   }
 
+  assertSafeAppRelPath(source.file, context.appRoot, context.repoRoot);
   const repoRelFile = appToRepoPath(source.file, context.appRoot, context.repoRoot);
   assertCleanFiles(context.repoRoot, [repoRelFile]);
 
