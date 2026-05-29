@@ -5,7 +5,8 @@ export class MockGenerator implements VariantGenerator {
   async generate(input: GenerateVariantsInput): Promise<VariantOutput[]> {
     const file = input.selectedSource.file;
     const content = input.codeRange.content;
-    const candidate = pickTextChange(content);
+    const preferredIndex = input.codeRange.selectedLine - input.codeRange.startLine;
+    const candidate = pickTextChange(content, preferredIndex);
 
     if (candidate === null) {
       return [];
@@ -72,10 +73,19 @@ type TextChangeCandidate = {
 
 const TEXT_LINE_PATTERN = /^(\s*)([^\s<>{}][^<>{}]*?)$/;
 
-function pickTextChange(content: string): TextChangeCandidate | null {
+function pickTextChange(
+  content: string,
+  preferredIndex: number,
+): TextChangeCandidate | null {
   const lines = content.split("\n");
 
-  for (const rawLine of lines) {
+  for (const lineIndex of lineIndexesByDistance(lines.length, preferredIndex)) {
+    const rawLine = lines[lineIndex];
+
+    if (rawLine === undefined) {
+      continue;
+    }
+
     const match = TEXT_LINE_PATTERN.exec(rawLine);
 
     if (match === null) {
@@ -108,6 +118,30 @@ function pickTextChange(content: string): TextChangeCandidate | null {
   }
 
   return null;
+}
+
+function lineIndexesByDistance(length: number, preferredIndex: number): number[] {
+  if (length <= 0) {
+    return [];
+  }
+
+  const clampedIndex = Math.min(Math.max(preferredIndex, 0), length - 1);
+  const indexes: number[] = [clampedIndex];
+
+  for (let distance = 1; indexes.length < length; distance += 1) {
+    const after = clampedIndex + distance;
+    const before = clampedIndex - distance;
+
+    if (after < length) {
+      indexes.push(after);
+    }
+
+    if (before >= 0) {
+      indexes.push(before);
+    }
+  }
+
+  return indexes;
 }
 
 function shorten(text: string): string {

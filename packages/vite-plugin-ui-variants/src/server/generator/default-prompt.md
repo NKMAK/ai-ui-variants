@@ -27,6 +27,7 @@ Rules:
 - Use search/replace edits only. Do not output diffs.
 - The search text must be copied exactly from the provided code range.
 - Each search text must appear uniquely in the provided code range.
+- Prefer the selected line, or the nearest editable text/props/className immediately around it.
 - Keep changes small and safe for Fast Refresh.
 - Only change text, labels, props, className, or size-like values.
 - Do not add imports.
