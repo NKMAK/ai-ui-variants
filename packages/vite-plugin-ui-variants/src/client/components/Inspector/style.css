@@ -14,11 +14,11 @@
 }
 
 .inspector-highlight.is-selected {
-  border: 2px solid #f59e0b;
+  border: 2px solid #2563eb;
   border-radius: 8px;
-  background: rgba(245, 158, 11, 0.1);
+  background: rgba(37, 99, 235, 0.1);
   box-shadow:
-    0 0 0 2px rgba(255, 247, 237, 0.95),
-    0 0 0 5px rgba(245, 158, 11, 0.52),
-    0 14px 32px rgba(120, 53, 15, 0.22);
+    0 0 0 2px rgba(239, 246, 255, 0.95),
+    0 0 0 5px rgba(37, 99, 235, 0.52),
+    0 14px 32px rgba(30, 64, 175, 0.22);
 }
