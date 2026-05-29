@@ -4,7 +4,7 @@ Webアプリ上のUIをクリックし、そのソースコード位置を特定
 
 > 中心価値: **UIをクリックして、AIが作った複数のコード変更案を実画面で選べる。**
 
-**現状: 仕様・技術選定フェーズ。コードは未着手**（`.claude/specs/`・`.claude/tech/` のドキュメントのみ）。実装に入る前に必ず仕様と技術ドキュメントを参照すること。
+**現状: MVP 実装中**。`packages/vite-plugin-ui-variants/`（shared / server / client / plugin entry）と `examples/demo-app/` の足場まで実装済み。残タスク・引き継ぎは `plan/ui-variant-preview-mvp/` を参照。実装前には必ず仕様（`.claude/specs/`）と技術ドキュメント（`.claude/tech/`）を参照すること。
 
 ## 技術スタック
 
@@ -22,15 +22,13 @@ Webアプリ上のUIをクリックし、そのソースコード位置を特定
 
 ## コマンド
 
-> **注意: `package.json` は未作成**。実装着手時に scripts として確定させ、この表を実態に更新すること。以下は pnpm monorepo + Vite を前提とした想定。
-
 | コマンド | 用途 |
 | --- | --- |
 | `pnpm install` | 依存インストール |
 | `pnpm --filter demo-app dev` | デモアプリの Vite dev server 起動（overlay 動作確認） |
-| `pnpm --filter vite-plugin-ui-variants build` | プラグイン本体のビルド |
-| `pnpm tsc --noEmit`（各パッケージ） | 型チェック |
-| `pnpm lint` | Lint |
+| `pnpm --filter demo-app build` | デモアプリのビルド（`tsc --noEmit && vite build`） |
+| `pnpm --filter vite-plugin-ui-variants build` | プラグイン本体の型チェック（現状は `tsc --noEmit`） |
+| `pnpm lint` | 全パッケージで `tsc --noEmit`（root scripts の `lint`） |
 
 ## ディレクトリ構造
 
