@@ -5,33 +5,31 @@ export function Hero() {
     <section className="hero">
       <div className="hero-text">
         <p className="eyebrow" data-ui-source="src/components/Hero.tsx:7:9">
-          // a vite plugin for click-to-variant editing
+          // vite plugin · click → variant → pick
         </p>
         <h1 className="hero-title" data-ui-source="src/components/Hero.tsx:10:9">
-          Preview <em>AI-made</em> UI changes
-          <br />
-          before they touch your <span className="ink-underline">worktree</span>.
+          Click any UI element. <em>See three AI rewrites</em> in the screen you are
+          already using.
         </h1>
-        <p className="hero-sub" data-ui-source="src/components/Hero.tsx:15:9">
-          Click an element. Generate three code-backed variants. Flip between them in
-          the screen you are already using — then keep the one that stuck.
+        <p className="hero-sub" data-ui-source="src/components/Hero.tsx:14:9">
+          Each variant is a real code change, applied via Fast Refresh. No mockups, no
+          second window — your URL, auth, and form state stay put while you compare.
         </p>
         <div className="hero-ctas">
           <button
             type="button"
             className="cta cta-primary"
-            style={{ background: 'linear-gradient(135deg, #1a0020 0%, #2d0040 100%)', color: '#ff00ff', boxShadow: '0 0 15px #ff00ff, 0 0 30px #ff00ff, 0 0 60px rgba(255,0,255,0.5), inset 0 0 20px rgba(255,0,255,0.1)', border: '2px solid #ff00ff', fontFamily: 'monospace', letterSpacing: '0.2em', textTransform: 'uppercase', textShadow: '0 0 8px #ff00ff' }}
-            data-ui-source="src/components/Hero.tsx:20:11"
+            data-ui-source="src/components/Hero.tsx:19:11"
           >
-            ⚡ BOOT SEQUENCE
+            See the demo
             <span className="arrow" aria-hidden>
-              ◈
+              →
             </span>
           </button>
           <button
             type="button"
             className="cta cta-ghost"
-            data-ui-source="src/components/Hero.tsx:30:11"
+            data-ui-source="src/components/Hero.tsx:29:11"
           >
             Read the spec
           </button>
@@ -41,10 +39,10 @@ export function Hero() {
             <span>01</span> Vite plugin
           </li>
           <li>
-            <span>02</span> Local-first
+            <span>02</span> React + HMR
           </li>
           <li>
-            <span>03</span> Git-native
+            <span>03</span> Git worktree
           </li>
         </ul>
       </div>

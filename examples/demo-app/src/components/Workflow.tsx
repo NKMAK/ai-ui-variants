@@ -27,8 +27,8 @@ export function Workflow() {
             <span className="step-num">03</span>
             <h3>Preview</h3>
             <p>
-              Each variant lands in a <code>git worktree</code>. Fast Refresh swaps the
-              screen in place. Your input state stays put.
+              The selected patch is applied to your dev server. Fast Refresh swaps the
+              screen in place — your input state stays put.
             </p>
           </li>
           <li className="step" data-ui-source="src/components/Workflow.tsx:34:11">

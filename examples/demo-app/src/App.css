@@ -804,7 +804,7 @@ button {
   color: var(--vermillion);
 }
 
-.signup {
+.scratchpad {
   background: var(--paper);
   border: 1px solid var(--ink);
   padding: 36px 32px;
@@ -814,13 +814,13 @@ button {
   box-shadow: 14px 16px 0 -1px var(--ink);
 }
 
-.signup-head {
+.scratchpad-head {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.signup-head h3 {
+.scratchpad-head h3 {
   font-family: var(--serif);
   font-variation-settings:
     "opsz" 48,
@@ -832,12 +832,12 @@ button {
   letter-spacing: -0.015em;
 }
 
-.signup-head .chip {
+.scratchpad-head .chip {
   border-color: var(--line);
   background: var(--paper-warm);
 }
 
-.signup p {
+.scratchpad p {
   margin: 0;
   color: var(--ink-soft);
   font-size: 0.95rem;
@@ -858,33 +858,44 @@ button {
   color: var(--muted);
 }
 
-.field input {
+.field input,
+.field textarea {
   appearance: none;
   border: none;
-  border-bottom: 1.5px solid var(--ink);
   background: transparent;
   font-family: var(--serif);
   font-variation-settings:
     "opsz" 24,
     "wght" 380;
-  font-size: 1.15rem;
-  padding: 8px 0;
+  font-size: 1.1rem;
+  line-height: 1.5;
   color: var(--ink);
   outline: none;
   transition: border-color 0.18s ease;
 }
 
-.field input::placeholder {
+.field input {
+  border-bottom: 1.5px solid var(--ink);
+  padding: 8px 0;
+  font-size: 1.15rem;
+}
+
+.field textarea {
+  border: 1.5px solid var(--ink);
+  padding: 12px 14px;
+  resize: vertical;
+  min-height: 110px;
+}
+
+.field input::placeholder,
+.field textarea::placeholder {
   color: rgba(20, 18, 15, 0.32);
   font-style: italic;
 }
 
-.field input:focus {
+.field input:focus,
+.field textarea:focus {
   border-color: var(--vermillion);
-}
-
-.signup .cta {
-  align-self: flex-start;
 }
 
 .state-readout {
@@ -1031,7 +1042,7 @@ button {
     gap: 40px;
   }
 
-  .signup {
+  .scratchpad {
     padding: 28px 24px;
     box-shadow: 8px 10px 0 -1px var(--ink);
   }
