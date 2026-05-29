@@ -1,0 +1,24 @@
+{
+  "name": "vite-plugin-ui-variants",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "./src/index.ts",
+  "exports": {
+    ".": "./src/index.ts",
+    "./shared": "./src/shared/types.ts"
+  },
+  "scripts": {
+    "build": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "vite": "^7.0.0"
+  },
+  "dependencies": {
+    "@preact/signals": "^2.0.5",
+    "preact": "^10.26.9"
+  },
+  "devDependencies": {
+    "vite": "^7.0.0"
+  }
+}

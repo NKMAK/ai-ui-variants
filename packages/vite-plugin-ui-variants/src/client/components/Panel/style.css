@@ -1,0 +1,39 @@
+.ui-agent-panel {
+  position: fixed;
+  right: 16px;
+  bottom: 64px;
+  display: flex;
+  flex-direction: column;
+  width: min(380px, calc(100vw - 32px));
+  max-height: min(640px, calc(100vh - 88px));
+  border: 1px solid var(--ui-agent-border);
+  border-radius: 8px;
+  background: var(--ui-agent-bg);
+  box-shadow: var(--ui-agent-shadow);
+  color: var(--ui-agent-text);
+  overflow: hidden;
+  pointer-events: auto;
+}
+
+.ui-agent-panel__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px;
+  border-bottom: 1px solid var(--ui-agent-border);
+}
+
+.ui-agent-panel__title {
+  margin: 0;
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.2;
+}
+
+.ui-agent-panel__body {
+  display: grid;
+  gap: 12px;
+  padding: 12px;
+  overflow: auto;
+}

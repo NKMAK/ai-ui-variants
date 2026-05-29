@@ -1,0 +1,61 @@
+.ui-agent-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 32px;
+  padding: 0 12px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.ui-agent-button:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.34);
+  outline-offset: 2px;
+}
+
+.ui-agent-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.48;
+}
+
+.ui-agent-button--primary {
+  background: #2563eb;
+  border-color: rgba(255, 255, 255, 0.12);
+  color: #ffffff;
+}
+
+.ui-agent-button--primary:not(:disabled):hover {
+  background: #1d4ed8;
+}
+
+.ui-agent-button--ghost {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: var(--ui-agent-border);
+  color: var(--ui-agent-text);
+}
+
+.ui-agent-button--ghost:not(:disabled):hover {
+  border-color: rgba(255, 255, 255, 0.32);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.ui-agent-spinner {
+  width: 14px;
+  height: 14px;
+  border: 2px solid rgba(255, 255, 255, 0.28);
+  border-top-color: #ffffff;
+  border-radius: 999px;
+  animation: ui-agent-spin 0.8s linear infinite;
+}
+
+@keyframes ui-agent-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

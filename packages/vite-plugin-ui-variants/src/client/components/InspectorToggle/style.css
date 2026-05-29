@@ -1,0 +1,51 @@
+.inspector-toggle {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 146px;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid var(--ui-agent-border);
+  border-radius: 8px;
+  background: var(--ui-agent-bg);
+  box-shadow: var(--ui-agent-shadow);
+  color: var(--ui-agent-text);
+  cursor: pointer;
+  pointer-events: auto;
+}
+
+.inspector-toggle:hover {
+  border-color: rgba(255, 255, 255, 0.32);
+}
+
+.inspector-toggle:focus-visible {
+  outline: 3px solid rgba(37, 99, 235, 0.34);
+  outline-offset: 2px;
+}
+
+.inspector-toggle.is-enabled {
+  background: var(--ui-agent-bg-active);
+}
+
+.inspector-toggle__status {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--ui-agent-text-muted);
+}
+
+.inspector-toggle.is-enabled .inspector-toggle__status {
+  background: #86efac;
+}
+
+.inspector-toggle__label {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  font-size: 13px;
+  font-weight: 650;
+  line-height: 1;
+}

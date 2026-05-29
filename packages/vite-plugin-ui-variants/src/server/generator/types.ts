@@ -1,0 +1,20 @@
+import type { SourceLocation, VariantOutput } from "../../shared/types.ts";
+
+export type CodeRange = {
+  file: string;
+  startLine: number;
+  endLine: number;
+  content: string;
+};
+
+export type GenerateVariantsInput = {
+  instruction: string;
+  selectedSource: SourceLocation;
+  codeRange: CodeRange;
+  callerSource?: SourceLocation;
+  count: number;
+};
+
+export interface VariantGenerator {
+  generate(input: GenerateVariantsInput): Promise<VariantOutput[]>;
+}
