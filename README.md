@@ -20,11 +20,19 @@ pnpm install
 
 ## Demo
 
-```bash
-pnpm --filter demo-app dev
-```
+`examples/demo-app` は、このプロダクト自体を紹介する英語の product landing page を兼ねた editable demo です。役割は次の2つに分かれます:
 
-ブラウザで demo app を開き、右下の inspector を ON にして `SaveButton` をクリックします。指示欄に例として `このボタンを目立たせて` と入力し、生成すると Variant が返ります。
+- **Local editable demo**: `pnpm --filter demo-app dev` で起動し、overlay を ON にすると Hero / CTA / workflow card / feature card / Playground の form CTA など、`data-ui-source` 付きの主要要素をクリックして variant 生成・preview できます。
+- **Public landing page (GitHub Pages)**: `pnpm --filter demo-app build:pages` または `.github/workflows/demo-pages.yml` 経由で static build され、GitHub Pages 配下 `/ai-ui-variants/` で公開されます。公開版は LP 表示のみで、local agent overlay は動きません。
+
+```bash
+# local editable demo（overlay 操作可能）
+pnpm --filter demo-app dev
+
+# GitHub Pages 用 static build（base path = /ai-ui-variants/）
+pnpm --filter demo-app build:pages
+pnpm --filter demo-app preview
+```
 
 ## Generator
 

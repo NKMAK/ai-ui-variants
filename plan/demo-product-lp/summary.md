@@ -6,16 +6,16 @@
 
 ## 参照ドキュメント
 
-| ドキュメント | 確認観点 |
-| --- | --- |
-| `.claude/specs/2026-05-27-v2-ui-variant-preview-agent-mvp.md` | demo の役割、`data-ui-source` 手書き、同一ファイル・構造を壊さない変更制約 |
-| `.claude/tech/folder-structure.md` | `examples/demo-app` の責務、monorepo 内のパス基準 |
-| `.claude/tech/react.md` | demo app は React host app、Fast Refresh の状態維持を見せる preview surface |
-| `.claude/tech/data-ui-source.md` | `data-ui-source` はアプリルート相対で手書き、クリック対象の設計 |
-| `.claude/tech/hmr-fast-refresh.md` | variant で許可する変更タイプ、state を失わない設計 |
-| `examples/demo-app/src/App.tsx` | 現在の最小 demo 画面、state 維持用 input の存在 |
-| `examples/demo-app/src/components/SaveButton.tsx` | 現在の唯一の `data-ui-source` 付き編集対象 |
-| `examples/demo-app/vite.config.ts` | demo app の Vite 設定、GitHub Pages 用 `base` 追加候補 |
+| ドキュメント                                                  | 確認観点                                                                    |
+| ------------------------------------------------------------- | --------------------------------------------------------------------------- |
+| `.claude/specs/2026-05-27-v2-ui-variant-preview-agent-mvp.md` | demo の役割、`data-ui-source` 手書き、同一ファイル・構造を壊さない変更制約  |
+| `.claude/tech/folder-structure.md`                            | `examples/demo-app` の責務、monorepo 内のパス基準                           |
+| `.claude/tech/react.md`                                       | demo app は React host app、Fast Refresh の状態維持を見せる preview surface |
+| `.claude/tech/data-ui-source.md`                              | `data-ui-source` はアプリルート相対で手書き、クリック対象の設計             |
+| `.claude/tech/hmr-fast-refresh.md`                            | variant で許可する変更タイプ、state を失わない設計                          |
+| `examples/demo-app/src/App.tsx`                               | 現在の最小 demo 画面、state 維持用 input の存在                             |
+| `examples/demo-app/src/components/SaveButton.tsx`             | 現在の唯一の `data-ui-source` 付き編集対象                                  |
+| `examples/demo-app/vite.config.ts`                            | demo app の Vite 設定、GitHub Pages 用 `base` 追加候補                      |
 
 ## 現在地
 
@@ -36,12 +36,12 @@
 
 ## フェーズ一覧
 
-| # | フェーズ名 | 状態 | 詳細ファイル |
-| --- | --- | --- | --- |
-| 1 | LP 情報設計と編集対象設計 | 未着手 | [01-content-and-edit-targets.md](01-content-and-edit-targets.md) |
-| 2 | demo app の LP 実装 | 未着手 | [02-demo-lp-implementation.md](02-demo-lp-implementation.md) |
-| 3 | GitHub Pages build/deploy 準備 | 未着手 | [03-github-pages.md](03-github-pages.md) |
-| 4 | 検証・ドキュメント・コミット | 未着手 | [04-verification-and-handoff.md](04-verification-and-handoff.md) |
+| #   | フェーズ名                     | 状態 | 詳細ファイル                                                     |
+| --- | ------------------------------ | ---- | ---------------------------------------------------------------- |
+| 1   | LP 情報設計と編集対象設計      | 完了 | [01-content-and-edit-targets.md](01-content-and-edit-targets.md) |
+| 2   | demo app の LP 実装            | 完了 | [02-demo-lp-implementation.md](02-demo-lp-implementation.md)     |
+| 3   | GitHub Pages build/deploy 準備 | 完了 | [03-github-pages.md](03-github-pages.md)                         |
+| 4   | 検証・ドキュメント・コミット   | 完了 | [04-verification-and-handoff.md](04-verification-and-handoff.md) |
 
 ## スコープ外
 
@@ -53,14 +53,23 @@
 
 ## 完了条件
 
-- [ ] `examples/demo-app` が英語の product landing page として成立している。
-- [ ] LP 内の主要な編集対象に `data-ui-source` が付いている。
-- [ ] 入力欄などの state を保持したまま variant preview できる確認用 UI が残っている。
-- [ ] `pnpm --filter demo-app build` が通る。
-- [ ] `pnpm --filter demo-app dev` で overlay から LP 要素を選択できる。
-- [ ] GitHub Pages 向け build/deploy の手順または workflow が整備されている。
-- [ ] 変更内容と検証方法が README または plan に残っている。
+- [x] `examples/demo-app` が英語の product landing page として成立している。
+- [x] LP 内の主要な編集対象に `data-ui-source` が付いている（Masthead / Hero / PreviewCard / Workflow / Features / Playground / Footer の各コンポーネント）。
+- [x] 入力欄などの state を保持したまま variant preview できる確認用 UI が残っている（`Playground.tsx` の email input、`PreviewCard.tsx` の active variant）。
+- [x] `pnpm --filter demo-app build` が通る。
+- [ ] `pnpm --filter demo-app dev` で overlay から LP 要素を選択できる（ブラウザ確認はユーザー側で実施）。
+- [x] GitHub Pages 向け build/deploy の手順または workflow が整備されている（`build:pages` script、`.github/workflows/demo-pages.yml`、`vite.config.ts` の base 切替）。
+- [x] 変更内容と検証方法が README または plan に残っている。
 - [ ] 変更をコミットする。
+
+## 実装メモ
+
+- LP は editorial paper + brutalist mono の方向で構築（Fraunces 可変フォントの italic ヘッドライン、IBM Plex Mono のタグ、vermillion アクセント）。
+- コンポーネントは `src/components/` に責務単位で分割（Masthead / Hero / PreviewCard / Workflow / Features / Playground / Footer）。各コンポーネントが自身の `data-ui-source` を持つ。
+- `PreviewCard.tsx` は Variant A/B/C で見た目と text が切り替わる product mock を内蔵し、ツールの中心体験を hero で示す。
+- `data-ui-source` の行番号は prettier 整形後の実位置に揃え済み。
+- GitHub Pages 用 base path は `process.env.GITHUB_PAGES === "true"` で切替（`/ai-ui-variants/`）。Actions は `main` への push で発火。
+- `SaveButton.tsx` は LP 化に伴い削除。`PreviewCard` の mock 表示内で参照されるパスは demo 用の架空ファイル名として残している。
 
 ## Claude 実装時の注意
 
