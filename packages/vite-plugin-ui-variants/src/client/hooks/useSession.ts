@@ -1,11 +1,7 @@
 import { useEffect } from "preact/hooks";
 
 import { postStart } from "../api/client.ts";
-import {
-  selectedSource,
-  sessionError,
-  sessionId,
-} from "../store/overlayStore.ts";
+import { selectedSource, sessionError, sessionId } from "../store/overlayStore.ts";
 
 export function useSession(): void {
   const source = selectedSource.value;

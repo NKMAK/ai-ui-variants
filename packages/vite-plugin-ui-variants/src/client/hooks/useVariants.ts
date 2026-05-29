@@ -1,10 +1,5 @@
 import type { Variant } from "../../shared/types.ts";
-import {
-  postApply,
-  postDiscard,
-  postGenerate,
-  postPreview,
-} from "../api/client.ts";
+import { postApply, postDiscard, postGenerate, postPreview } from "../api/client.ts";
 import {
   busy,
   currentIndex,

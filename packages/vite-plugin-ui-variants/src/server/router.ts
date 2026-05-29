@@ -33,11 +33,7 @@ import {
   withSessionLock,
   type SessionContext,
 } from "./session.ts";
-import {
-  applyChangesAndDiff,
-  createWorktrees,
-  removeWorktrees,
-} from "./worktree.ts";
+import { applyChangesAndDiff, createWorktrees, removeWorktrees } from "./worktree.ts";
 
 type NextFunction = (error?: unknown) => void;
 type Handler = (req: IncomingMessage, res: ServerResponse, next: NextFunction) => void;
@@ -259,7 +255,8 @@ async function generateVariants(
         }
       } catch (error: unknown) {
         variant.status = "failed";
-        variant.error = error instanceof Error ? error.message : "Unknown variant error.";
+        variant.error =
+          error instanceof Error ? error.message : "Unknown variant error.";
       }
     }
 

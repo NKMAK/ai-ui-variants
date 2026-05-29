@@ -6,11 +6,11 @@ UI をクリックしてソース位置を特定し、AI が作った複数の U
 
 ## Packages
 
-| Path | Role |
-| --- | --- |
+| Path                                | Role                                                                             |
+| ----------------------------------- | -------------------------------------------------------------------------------- |
 | `packages/vite-plugin-ui-variants/` | Vite plugin 本体。overlay 注入、local server、variant 生成、patch preview を担当 |
-| `examples/demo-app/` | 動作確認用の React + Vite demo app |
-| `.ui-variants/` | Claude Code generator 用の prompt/context 設定 |
+| `examples/demo-app/`                | 動作確認用の React + Vite demo app                                               |
+| `.ui-variants/`                     | Claude Code generator 用の prompt/context 設定                                   |
 
 ## Setup
 
@@ -35,7 +35,7 @@ uiVariants({
   generator: "claude-code",
   promptTemplatePath: ".ui-variants/claude-code-prompt.md",
   promptContextPaths: [".ui-variants/project-context.md"],
-})
+});
 ```
 
 Claude Code generator は `claude -p <prompt> --output-format json --allowedTools "" --model <model>` を local Node process から実行します。Claude に tools は渡さず、AI は search/replace JSON だけを返します。patch 化と preview/apply/discard は server 側が担当します。
@@ -59,7 +59,7 @@ UI_VARIANTS_CLAUDE_MODEL=opus pnpm --filter demo-app dev
 ## Checks
 
 ```bash
-pnpm --filter vite-plugin-ui-variants exec tsc --noEmit
-pnpm --filter demo-app exec tsc --noEmit
+pnpm format:check
 pnpm lint
+pnpm typecheck
 ```

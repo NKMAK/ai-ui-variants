@@ -29,12 +29,7 @@ export type UiVariantsOptions = {
   promptContextPaths?: string[];
 };
 
-export type VariantStatus =
-  | "pending"
-  | "ready"
-  | "previewing"
-  | "applied"
-  | "failed";
+export type VariantStatus = "pending" | "ready" | "previewing" | "applied" | "failed";
 
 export type Variant = VariantOutput & {
   id: string;

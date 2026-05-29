@@ -83,9 +83,7 @@ function countChangedLines(patch: string): number {
 function isDeniedFile(repoRelFile: string): boolean {
   const normalizedFile = normalizePath(repoRelFile);
 
-  return DENYLIST.some((pattern) =>
-    matchesDenyPattern(normalizedFile, pattern),
-  );
+  return DENYLIST.some((pattern) => matchesDenyPattern(normalizedFile, pattern));
 }
 
 function matchesDenyPattern(repoRelFile: string, pattern: string): boolean {
@@ -100,18 +98,12 @@ function matchesDenyPattern(repoRelFile: string, pattern: string): boolean {
     return fileName.startsWith(".env.");
   }
 
-  if (
-    normalizedPattern.startsWith("**/*") &&
-    normalizedPattern.endsWith("*")
-  ) {
+  if (normalizedPattern.startsWith("**/*") && normalizedPattern.endsWith("*")) {
     const needle = normalizedPattern.slice("**/*".length, -1).toLowerCase();
     return repoRelFile.toLowerCase().includes(needle);
   }
 
-  if (
-    normalizedPattern.startsWith("**/") &&
-    normalizedPattern.endsWith("/**")
-  ) {
+  if (normalizedPattern.startsWith("**/") && normalizedPattern.endsWith("/**")) {
     const directoryName = normalizedPattern.slice("**/".length, -"/**".length);
     return repoRelFile.split("/").includes(directoryName);
   }
@@ -119,8 +111,7 @@ function matchesDenyPattern(repoRelFile: string, pattern: string): boolean {
   if (normalizedPattern.endsWith("/**")) {
     const directoryPrefix = normalizedPattern.slice(0, -"/**".length);
     return (
-      repoRelFile === directoryPrefix ||
-      repoRelFile.startsWith(`${directoryPrefix}/`)
+      repoRelFile === directoryPrefix || repoRelFile.startsWith(`${directoryPrefix}/`)
     );
   }
 

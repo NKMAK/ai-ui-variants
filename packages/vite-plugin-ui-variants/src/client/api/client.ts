@@ -14,10 +14,10 @@ export async function postStart(
   source: SourceLocation,
   instruction = "",
 ): Promise<ApiResponse<StartSessionResponse>> {
-  return postJson<ApiResponse<StartSessionResponse>>(
-    `${API_ENDPOINTS.session}/start`,
-    { source, instruction },
-  );
+  return postJson<ApiResponse<StartSessionResponse>>(`${API_ENDPOINTS.session}/start`, {
+    source,
+    instruction,
+  });
 }
 
 export async function postGenerate(

@@ -10,8 +10,8 @@ export function App() {
         <p className="eyebrow">UI Variant Preview Agent</p>
         <h1>クリックしたUIから変更案を選ぶ</h1>
         <p className="lead">
-          入力欄は Fast Refresh の状態維持確認用です。ボタンには
-          data-ui-source を手書きしています。
+          入力欄は Fast Refresh の状態維持確認用です。ボタンには data-ui-source
+          を手書きしています。
         </p>
 
         <label className="field">

@@ -3,24 +3,25 @@ Return JSON only. Do not include markdown, code fences, explanations, or surroun
 
 Output schema:
 [
-  {
-    "title": "Variant A",
-    "description": "Short explanation of the visible UI change",
-    "changes": [
-      {
-        "file": "{{targetFile}}",
-        "edits": [
-          {
-            "search": "exact original text from the provided code range",
-            "replace": "replacement text"
-          }
-        ]
-      }
-    ]
-  }
+{
+"title": "Variant A",
+"description": "Short explanation of the visible UI change",
+"changes": [
+{
+"file": "{{targetFile}}",
+"edits": [
+{
+"search": "exact original text from the provided code range",
+"replace": "replacement text"
+}
+]
+}
+]
+}
 ]
 
 Rules:
+
 - Return exactly {{variantCount}} variants if possible.
 - Every change must target only this file: {{targetFile}}.
 - Use search/replace edits only. Do not output diffs.

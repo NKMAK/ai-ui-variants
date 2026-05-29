@@ -60,22 +60,13 @@ function runClaudeProcess(
 ): Promise<{ stdout: string }> {
   return new Promise((resolve, reject) => {
     const child = spawn(
-        "claude",
-        [
-          "-p",
-          prompt,
-          "--output-format",
-          "json",
-          "--allowedTools",
-          "",
-          "--model",
-          model,
-        ],
-        {
-          cwd,
-          stdio: ["ignore", "pipe", "pipe"],
-        },
-      );
+      "claude",
+      ["-p", prompt, "--output-format", "json", "--allowedTools", "", "--model", model],
+      {
+        cwd,
+        stdio: ["ignore", "pipe", "pipe"],
+      },
+    );
 
     let stdout = "";
     let stderr = "";
@@ -152,8 +143,9 @@ function extractClaudeResult(stdout: string): string {
     return trimmed;
   }
 
-  const result =
-    Array.isArray(wrapper) ? findResultField(wrapper) : getResultField(wrapper);
+  const result = Array.isArray(wrapper)
+    ? findResultField(wrapper)
+    : getResultField(wrapper);
 
   if (typeof result === "string") {
     return result;

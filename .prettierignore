@@ -1,0 +1,11 @@
+node_modules
+dist
+coverage
+.ui-agent
+.playwright-mcp
+.claude
+AGENTS.md
+CLAUDE.md
+plan/ui-variant-preview-mvp
+plan/prompt-customization
+pnpm-lock.yaml
