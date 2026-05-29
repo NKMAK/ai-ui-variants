@@ -36,9 +36,7 @@ export function useInspector(): void {
         return;
       }
 
-      const source = parseSourceLocation(
-        sourceElement.getAttribute("data-ui-source"),
-      );
+      const source = parseSourceLocation(sourceElement.getAttribute("data-ui-source"));
 
       if (source === null) {
         return;

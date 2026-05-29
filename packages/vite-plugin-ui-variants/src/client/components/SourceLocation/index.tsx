@@ -1,9 +1,5 @@
 /** @jsxImportSource preact */
-import {
-  selectedSource,
-  sessionError,
-  sessionId,
-} from "../../store/overlayStore.ts";
+import { selectedSource, sessionError, sessionId } from "../../store/overlayStore.ts";
 
 type SourceLocationProps = {
   embedded?: boolean;
@@ -28,7 +24,11 @@ export function SourceLocation({ embedded = false }: SourceLocationProps) {
       <div className="source-location__path">
         {source.file}:{source.line}:{source.column}
       </div>
-      <div className={error ? "source-location__status is-error" : "source-location__status"}>
+      <div
+        className={
+          error ? "source-location__status is-error" : "source-location__status"
+        }
+      >
         {error ?? (id === null ? "Starting session..." : `Session ${id}`)}
       </div>
     </section>

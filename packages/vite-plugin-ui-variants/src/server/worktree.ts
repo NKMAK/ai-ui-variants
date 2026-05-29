@@ -59,11 +59,9 @@ export function removeWorktrees(repoRoot: string, sid: string): void {
       continue;
     }
 
-    execFileSync(
-      "git",
-      ["-C", repoRoot, "worktree", "remove", "--force", targetDir],
-      { stdio: "pipe" },
-    );
+    execFileSync("git", ["-C", repoRoot, "worktree", "remove", "--force", targetDir], {
+      stdio: "pipe",
+    });
   }
 }
 

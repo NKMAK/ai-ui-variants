@@ -33,11 +33,7 @@ import {
   withSessionLock,
   type SessionContext,
 } from "./session.ts";
-import {
-  applyChangesAndDiff,
-  createWorktrees,
-  removeWorktrees,
-} from "./worktree.ts";
+import { applyChangesAndDiff, createWorktrees, removeWorktrees } from "./worktree.ts";
 
 type NextFunction = (error?: unknown) => void;
 type Handler = (req: IncomingMessage, res: ServerResponse, next: NextFunction) => void;
@@ -52,7 +48,7 @@ export function createRouter(
   const appRoot = options.appRoot ?? server.config.root;
   const repoRoot = resolveRepoRoot(appRoot);
   const context: SessionContext = { appRoot, repoRoot };
-  const generator = createGenerator(options.generator ?? "mock", repoRoot);
+  const generator = createGenerator(options, repoRoot);
 
   return (req, res, next) => {
     void handleRequest(req, res, context, generator).catch((error: unknown) => {
@@ -77,11 +73,15 @@ export function createRouter(
 }
 
 function createGenerator(
-  generator: UiVariantsOptions["generator"],
+  options: UiVariantsOptions,
   repoRoot: string,
 ): VariantGenerator {
-  if (generator === "claude-code") {
-    return new ClaudeCodeGenerator({ cwd: repoRoot });
+  if (options.generator === "claude-code") {
+    return new ClaudeCodeGenerator({
+      cwd: repoRoot,
+      promptTemplatePath: options.promptTemplatePath,
+      promptContextPaths: options.promptContextPaths,
+    });
   }
 
   return new MockGenerator();
@@ -255,7 +255,8 @@ async function generateVariants(
         }
       } catch (error: unknown) {
         variant.status = "failed";
-        variant.error = error instanceof Error ? error.message : "Unknown variant error.";
+        variant.error =
+          error instanceof Error ? error.message : "Unknown variant error.";
       }
     }
 

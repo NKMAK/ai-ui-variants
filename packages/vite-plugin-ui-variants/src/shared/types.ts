@@ -25,14 +25,11 @@ export type UiVariantGeneratorKind = "mock" | "claude-code";
 export type UiVariantsOptions = {
   appRoot?: string;
   generator?: UiVariantGeneratorKind;
+  promptTemplatePath?: string;
+  promptContextPaths?: string[];
 };
 
-export type VariantStatus =
-  | "pending"
-  | "ready"
-  | "previewing"
-  | "applied"
-  | "failed";
+export type VariantStatus = "pending" | "ready" | "previewing" | "applied" | "failed";
 
 export type Variant = VariantOutput & {
   id: string;

@@ -30,10 +30,6 @@ export function patchesDir(repoRoot: string, sid: string): string {
   return path.join(sessionDir(repoRoot, sid), "patches");
 }
 
-export function worktreeDir(
-  repoRoot: string,
-  sid: string,
-  variantId: string,
-): string {
+export function worktreeDir(repoRoot: string, sid: string, variantId: string): string {
   return path.join(uiAgentDir(repoRoot), "worktrees", sid, variantId);
 }
