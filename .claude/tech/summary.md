@@ -10,7 +10,7 @@
 |---|---|
 | Browser Overlay / Inspector UI | [Preact](preact.md) + [Signals](preact-signals.md) / [Shadow DOM](shadow-dom.md) |
 | Local Agent Server | [Vite](vite.md) middleware / [git worktree](git-worktree.md) |
-| AI Patch Generator | [mock generator](ai-mock-generator.md)（後でClaude API化） |
+| AI Patch Generator | [AI Patch Generator](ai-mock-generator.md)（mock / Claude Code headless） |
 
 ## ファイル一覧
 
@@ -27,8 +27,8 @@
 | [git-worktree.md](git-worktree.md) | variantを隔離生成し `git diff` でpatch化。worktree base一致でconflictなく当たる。temp dir簡素化の代替も記載。 |
 | [hmr-fast-refresh.md](hmr-fast-refresh.md) | preview切替の仕組み。ファイル書込で自動発火。状態維持が効く条件（同一ファイル・構造を壊さない）。 |
 | [data-ui-source.md](data-ui-source.md) | UI→ソース位置の対応付け属性。デモは手書き／本番はビルド時注入。行番号ズレの扱い。 |
-| [ai-mock-generator.md](ai-mock-generator.md) | AIは「変更後コード」を返し、patch化はサーバ側。generator interface・型・patch検証（denylist等）。 |
+| [ai-mock-generator.md](ai-mock-generator.md) | AIは「変更後コード」を返し、patch化はサーバ側。generator interface・型・Claude Code prompt/model指定・patch検証（denylist等）。 |
 
 ---
 
-最終更新: 2026-05-27
+最終更新: 2026-05-29

@@ -62,7 +62,7 @@ Claude Code の model は環境変数で指定できます。
 UI_VARIANTS_CLAUDE_MODEL=opus pnpm --filter demo-app dev
 ```
 
-未指定の場合は `claude-sonnet-4-6` を使います。
+未指定の場合は `claude-haiku-4-5` を使います。
 
 ## Checks
 
