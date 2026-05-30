@@ -1,73 +1,177 @@
 # ai-ui-variants
 
-UI をクリックしてソース位置を特定し、AI が作った複数の UI 変更案を実画面で preview しながら選ぶための Vite plugin 実験プロジェクトです。
+> Click a UI element, let AI generate multiple code-change variants, and preview them live — right on the screen you're looking at.
 
-中心の体験は、クリックした UI に対して `Variant A / B / C` を生成し、「前へ / 次へ」で見比べ、良い案だけを作業ツリーへ残すことです。
+`ai-ui-variants` is an experimental [Vite](https://vitejs.dev/) plugin that turns "tweak this button / heading / card" into a tight loop:
 
-## Packages
+1. **Click** a rendered element in your running app.
+2. The plugin resolves it back to the exact source location.
+3. AI generates several variants (`Variant A / B / C`) over a minimal slice of code.
+4. **Preview** each variant live via HMR and step through them with *prev / next*.
+5. **Apply** the one you like to your working tree — discard the rest.
 
-| Path                                | Role                                                                             |
-| ----------------------------------- | -------------------------------------------------------------------------------- |
-| `packages/vite-plugin-ui-variants/` | Vite plugin 本体。overlay 注入、local server、variant 生成、patch preview を担当 |
-| `examples/demo-app/`                | 動作確認用の React + Vite demo app                                               |
-| `.ui-variants/`                     | Claude Code generator 用の prompt/context 設定                                   |
+The AI never writes diffs. It returns the changed code (as search/replace blocks); the server turns that into a patch deterministically with `git diff`, so changes apply cleanly to your real tree.
 
-## Setup
-
-```bash
-pnpm install
-```
+> **Status:** MVP / experimental. APIs and behavior may change.
 
 ## Demo
 
-`examples/demo-app` は、このプロダクト自体を紹介する英語の product landing page を兼ねた editable demo です。役割は次の2つに分かれます:
+A public landing page (display only — the local agent overlay does not run there) is published via GitHub Pages:
 
-- **Local editable demo**: `pnpm --filter demo-app dev` で起動し、overlay を ON にすると Hero / CTA / workflow card / feature card / Playground の form CTA など、`data-ui-source` 付きの主要要素をクリックして variant 生成・preview できます。
-- **Public landing page (GitHub Pages)**: `pnpm --filter demo-app build:pages` または `.github/workflows/demo-pages.yml` 経由で static build され、GitHub Pages 配下 `/ai-ui-variants/` で公開されます。公開版は LP 表示のみで、local agent overlay は動きません。
+👉 **https://nkmak.github.io/ai-ui-variants/**
 
-```bash
-# local editable demo（overlay 操作可能）
-pnpm --filter demo-app dev
+To try the editable overlay, run the demo app locally (see [Quick start](#quick-start)).
 
-# GitHub Pages 用 static build（base path = /ai-ui-variants/）
-pnpm --filter demo-app build:pages
-pnpm --filter demo-app preview
+## How it works
+
+The tool is one Vite plugin wrapping three cooperating pieces:
+
+```
+┌─────────────────────┐     HTTP (/__ui_agent)      ┌──────────────────────┐
+│  Browser Overlay     │ ─────────────────────────▶ │  Local Agent Server   │
+│  (Preact + Shadow    │                            │  (Vite middleware)    │
+│   DOM, injected)     │ ◀───────────────────────── │  session / snapshot / │
+│  click → inspect →   │     variants, patches      │  worktree / patch     │
+│  preview → apply     │                            │           │           │
+└─────────────────────┘                            └───────────┼───────────┘
+                                                                ▼
+                                                    ┌──────────────────────┐
+                                                    │  AI Patch Generator   │
+                                                    │  mock | claude-code   │
+                                                    └──────────────────────┘
 ```
 
-## Generator
+- **Browser Overlay** — injected into the page, isolated in a Shadow DOM. Lets you pick an element, send an instruction, and flip through generated variants.
+- **Local Agent Server** — Vite dev middleware mounted at `/__ui_agent`. Manages sessions, captures a base snapshot, isolates work in a `git worktree`, and builds/applies patches.
+- **AI Patch Generator** — pluggable. Ships with a `mock` generator and a `claude-code` generator.
 
-`uiVariants()` の既定 generator は `mock` です。Claude Code を使う場合は demo app の Vite config のように明示します。
+At build time, the plugin's `transform` hook auto-annotates intrinsic JSX elements with a `data-ui-source` attribute (app-root-relative path + line/column) so the overlay can map a click back to source.
+
+## Quick start
+
+Requirements: Node 20+, [pnpm](https://pnpm.io/).
+
+```bash
+pnpm install
+
+# Run the editable demo (overlay enabled)
+pnpm --filter demo-app dev
+```
+
+Open the dev server, toggle the overlay on, and click an element marked with `data-ui-source` (Hero, CTA, feature cards, the Playground form, …) to generate and preview variants.
+
+## Usage
+
+Add the plugin to your Vite config. It **must come before `@vitejs/plugin-react`** in the array (so its `transform` runs first).
 
 ```ts
-uiVariants({
-  generator: "claude-code",
-  promptTemplatePath: ".ui-variants/claude-code-prompt.md",
-  promptContextPaths: [".ui-variants/project-context.md"],
+// vite.config.ts
+import { defineConfig } from "vite";
+import react from "@vitejs/plugin-react";
+import { uiVariants } from "vite-plugin-ui-variants";
+
+export default defineConfig({
+  plugins: [
+    uiVariants({
+      generator: "claude-code",
+      promptTemplatePath: ".ui-variants/claude-code-prompt.md",
+      promptContextPaths: [".ui-variants/project-context.md"],
+    }),
+    react(),
+  ],
 });
 ```
 
-Claude Code generator は `claude -p <prompt> --output-format json --allowedTools "" --model <model>` を local Node process から実行します。Claude に tools は渡さず、AI は search/replace JSON だけを返します。patch 化と preview/apply/discard は server 側が担当します。
+The plugin only runs in `serve` (dev) mode.
 
-## Prompt Customization
+### Options
 
-Claude Code に渡す prompt は `.ui-variants/claude-code-prompt.md` で編集できます。`{{userInstruction}}` や `{{codeRangeJson}}` などの placeholder は server 側で埋め込まれます。
+| Option               | Type                      | Default     | Description                                                         |
+| -------------------- | ------------------------- | ----------- | ------------------------------------------------------------------ |
+| `generator`          | `"mock" \| "claude-code"` | `"mock"`    | Which variant generator to use.                                    |
+| `appRoot`            | `string`                  | Vite `root` | App root used to normalize `data-ui-source` paths.                 |
+| `promptTemplatePath` | `string`                  | built-in    | Prompt template for the `claude-code` generator.                   |
+| `promptContextPaths` | `string[]`                | `[]`        | Extra Markdown files (design rules, Tailwind notes, …) to pass in. |
 
-Tailwind や design rule などの追加ドキュメントを渡したい場合は、Markdown ファイルを作り、`promptContextPaths` に追加します。現在の例は `.ui-variants/project-context.md` です。
+## Generators
 
-## Model
+### `mock` (default)
 
-Claude Code の model は環境変数で指定できます。
+Returns canned variants. Useful for developing the overlay/server without calling a model.
+
+### `claude-code`
+
+Runs the [Claude Code](https://claude.com/claude-code) CLI from a local Node process:
+
+```
+claude -p <prompt> --output-format json --allowedTools "" --model <model>
+```
+
+No tools are granted to the model — it returns search/replace JSON only. Patch creation, preview, apply, and discard are all handled server-side.
+
+#### Prompt customization
+
+The prompt sent to Claude Code lives in `.ui-variants/claude-code-prompt.md`. Placeholders such as `{{userInstruction}}` and `{{codeRangeJson}}` are filled in by the server. To pass extra context (design rules, Tailwind conventions, …), add Markdown files and list them in `promptContextPaths`.
+
+#### Model selection
+
+Set the model via environment variable:
 
 ```bash
 UI_VARIANTS_CLAUDE_MODEL=opus pnpm --filter demo-app dev
 ```
 
-未指定の場合は `claude-haiku-4-5` を使います。
+Defaults to `claude-haiku-4-5` when unset.
 
-## Checks
+## Safety constraints
 
-```bash
-pnpm format:check
-pnpm lint
-pnpm typecheck
+Variant generation is intentionally narrow and guarded:
+
+- **Clean-tree requirement** — a session won't start if the target file has uncommitted changes (keeps base snapshot, worktree base, and patch target aligned).
+- **Same-file, structure-preserving edits only** — text / label / props / className / size, etc. No import changes or cross-file ripples that would break Fast Refresh and lose state.
+- **Denylist** — patches touching `package.json`, lockfiles, `.env*`, anything matching `*auth*` / `*billing*` / `*migration*`, `migrations/`, `infra/`, or `.github/` are rejected mechanically.
+- **Limits** — at most `3` files and `100` diff lines per variant.
+- **Single-session lock** — sessions are serialized to avoid concurrent-edit conflicts.
+- **Snapshot-based rollback** — discard restores from the base snapshot rather than `git reset`, so your other work is never destroyed.
+
+## Project structure
+
 ```
+packages/
+  vite-plugin-ui-variants/   # the plugin (overlay + local server + generators)
+    src/
+      shared/                # types shared between server & client
+      server/                # session, snapshot, worktree, patch, generators (Node)
+      client/                # browser overlay (Preact, Shadow DOM)
+      transform/             # data-ui-source injection & path normalization
+      index.ts               # plugin entry
+examples/
+  demo-app/                  # React + Vite demo app (also the landing page)
+```
+
+Runtime session data lives under `.ui-agent/` (gitignored).
+
+## Scripts
+
+| Command                              | Description                              |
+| ------------------------------------ | ---------------------------------------- |
+| `pnpm install`                       | Install dependencies                     |
+| `pnpm --filter demo-app dev`         | Run the editable demo (overlay enabled)  |
+| `pnpm --filter demo-app build:pages` | Static build for GitHub Pages            |
+| `pnpm --filter demo-app preview`     | Preview the static build                 |
+| `pnpm typecheck`                     | Type-check all packages (`tsc --noEmit`) |
+| `pnpm lint`                          | Run ESLint                               |
+| `pnpm format:check`                  | Check formatting with Prettier           |
+
+## Tech stack
+
+- **Monorepo:** pnpm workspaces (`packages/` + `examples/`)
+- **Language:** TypeScript
+- **Plugin host:** Vite dev middleware + `transformIndexHtml` injection + HMR
+- **Overlay UI:** Preact + `@preact/signals`, isolated in a Shadow DOM
+- **Demo app:** React (Fast Refresh keeps state across previews)
+- **Variant isolation:** `git worktree` + `git diff`
+
+## License
+
+[MIT](./LICENSE) © NKMAK
