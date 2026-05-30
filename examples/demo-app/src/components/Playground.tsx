@@ -27,7 +27,7 @@ export function Playground() {
               <strong>03 Feature titles</strong> · explore alternative voicings.
             </li>
             <li>
-              <strong>04 Footer tag</strong> · A/B/C in three keystrokes.
+              <strong>04 Footer tag</strong> · flip through variants in a keystroke.
             </li>
           </ul>
         </div>

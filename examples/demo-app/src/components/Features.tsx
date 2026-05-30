@@ -9,44 +9,50 @@ export function Features() {
         <article className="feature">
           <span className="feature-num">F · 01</span>
           <h3>
-            Source-aware <em>by construction</em>
+            Pick from the <em>rendered UI</em>
           </h3>
           <p>
-            The dev plugin tags JSX with source metadata automatically. The overlay
-            sends the smallest possible code range — not the whole file, not the whole
-            screen.
+            Click the element you actually see — a button, a heading, a card. No
+            jumping to the editor to find the file. The overlay resolves the click
+            back to the exact source location for you.
           </p>
-          <span className="feature-tag">auto source metadata</span>
+          <span className="feature-tag">click to select</span>
         </article>
         <article className="feature">
           <span className="feature-num">F · 02</span>
-          <h3>Code-backed variants</h3>
+          <h3>
+            Multiple variants, <em>side by side</em>
+          </h3>
           <p>
-            The generator returns search-and-replace blocks. The server turns them into
-            git diffs deterministically — the model never writes the patch itself.
+            Ask once, get several alternatives. Flip between them right in the
+            running app and judge them where they will actually live — not in an
+            isolated preview canvas.
           </p>
-          <span className="feature-tag">git diff · search/replace</span>
+          <span className="feature-tag">compare in place</span>
         </article>
         <article className="feature">
           <span className="feature-num">F · 03</span>
-          <h3>Worktree-safe</h3>
+          <h3>
+            Your app <em>keeps running</em>
+          </h3>
           <p>
-            Each variant lives in its own git worktree. Rollback is a snapshot reset,
-            not git reset — your in-flight work stays untouched.
+            Form values, scroll position, open modals, the route you are on — all
+            preserved while you switch variants. No reload, no re-login, no
+            re-navigating to the screen you were tuning.
           </p>
-          <span className="feature-tag">git worktree</span>
+          <span className="feature-tag">state survives</span>
         </article>
         <article className="feature">
           <span className="feature-num">F · 04</span>
           <h3>
-            Fast Refresh <em>keeps the state</em>
+            Apply as a <em>plain diff</em>
           </h3>
           <p>
-            Variants are limited to same-file text, className, and props. React Fast
-            Refresh swaps the module without remounting — form values and routes
-            survive.
+            Keep the variant you like; the rest disappear. Changes land in your
+            working tree as a normal git diff — never auto-committed, easy to
+            review, trivial to undo.
           </p>
-          <span className="feature-tag">react fast refresh</span>
+          <span className="feature-tag">no auto-commit</span>
         </article>
       </div>
     </section>
