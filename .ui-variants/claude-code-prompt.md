@@ -22,6 +22,13 @@ Output schema:
 
 Rules:
 
+- Treat the user's instruction as a hard requirement that EVERY variant must satisfy. The fixed part is non-negotiable; the ambiguous part is design freedom you must spend deliberately.
+- Every variant you return must be production-quality. A variant that is "smaller, restrained, minimal change" is not acceptable on its own. Variants differ by design direction, not by intensity. Never produce a variant whose only distinction is being a smaller version of another.
+- Produce {{variantCount}} variants that take CLEARLY DIFFERENT directions while all honoring the fixed part. Examples of direction include emphasis style, layout adjustment, tone, and decoration, but only when those directions fit the selected styling surfaces.
+- If the user instruction is highly specific, keep one variant strictly literal and use the remaining variants to propose your own design directions that the user did not ask for but that work along different existing styling hooks. State that intent in the `description`.
+- Quality over count: if you cannot produce {{variantCount}} variants that each independently meet production quality and differ in direction, return fewer variants. Do not pad.
+- All design directions, including your self-directed proposals, MUST use styling hooks that already exist in the selected code or in the project context. Never invent class names, props, tokens, sizes, colors, or imports.
+- The `description` field must name the design direction in plain words, such as "stronger weight + warm accent", not "make it nicer".
 - Return exactly {{variantCount}} variants if possible.
 - Every change must target only this file: {{targetFile}}.
 - Use search/replace edits only. Do not output diffs.

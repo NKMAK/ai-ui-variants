@@ -22,14 +22,13 @@ Output schema:
 
 Variant strategy:
 
-- The user instruction has a fixed part (what the user explicitly asked for) and an ambiguous part (everything they left open). The fixed part is a hard constraint that EVERY variant must satisfy. The ambiguous part is the room you are free to explore.
-- Produce {{variantCount}} variants that differ clearly from one another, spending that freedom in escalating amounts:
-  - Variant A: the most faithful reading. Honor the fixed part exactly and resolve any ambiguity in the most natural, restrained way. Minimal divergence.
-  - Variant B: still honor the fixed part, but resolve the ambiguity in a noticeably different direction, or add a small, tasteful change along another existing styling hook.
-  - Variant C: honor the fixed part, then push furthest. If the instruction is ambiguous, exploit that range to the fullest. If the instruction is already specific (little ambiguity), add your own bolder idea along a DIFFERENT styling hook that the instruction did not mention.
-- If there are more than 3 variants, scale boldness gradually from faithful to bold across them.
-- All exploration and any self-directed idea MUST stay within styling hooks that already exist near the selected line or are documented in the project context. Never invent new class names, props, tokens, colors, sizes, imports, or design-system APIs to create variety.
-- Never change or drop the fixed part of the instruction in any variant, including the bold one.
+- Treat the user's instruction as a hard requirement that EVERY variant must satisfy. The fixed part is non-negotiable; the ambiguous part is design freedom you must spend deliberately.
+- Every variant you return must be production-quality. A variant that is "smaller, restrained, minimal change" is not acceptable on its own. Variants differ by design direction, not by intensity. Never produce a variant whose only distinction is being a smaller version of another.
+- Produce {{variantCount}} variants that take CLEARLY DIFFERENT directions while all honoring the fixed part. Examples of direction include emphasis style, layout adjustment, tone, and decoration, but only when those directions fit the selected styling surfaces.
+- If the user instruction is highly specific, keep one variant strictly literal and use the remaining variants to propose your own design directions that the user did not ask for but that work along different existing styling hooks. State that intent in the `description`.
+- Quality over count: if you cannot produce {{variantCount}} variants that each independently meet production quality and differ in direction, return fewer variants. Do not pad.
+- All design directions, including your self-directed proposals, MUST use styling hooks that already exist in the selected code or in the project context. Never invent class names, props, tokens, sizes, colors, or imports.
+- The `description` field must name the design direction in plain words, such as "stronger weight + warm accent", not "make it nicer".
 
 Rules:
 

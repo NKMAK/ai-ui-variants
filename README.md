@@ -7,7 +7,7 @@
 1. **Click** a rendered element in your running app.
 2. The plugin resolves it back to the exact source location.
 3. AI generates several variants (`Variant A / B / C`) over a minimal slice of code.
-4. **Preview** each variant live via HMR and step through them with *prev / next*.
+4. **Preview** each variant live via HMR and step through them with _prev / next_.
 5. **Apply** the one you like to your working tree — discard the rest.
 
 The AI never writes diffs. It returns the changed code (as search/replace blocks); the server turns that into a patch deterministically with `git diff`, so changes apply cleanly to your real tree.
@@ -56,7 +56,7 @@ This plugin targets a specific dev setup. Make sure your project meets all of th
 - **React** via [`@vitejs/plugin-react`](https://github.com/vitejs/vite-plugin-react) — the live-preview loop relies on Fast Refresh to keep component state across variants
 - **A git repository** — variants are isolated with `git worktree` and turned into patches with `git diff`
 - **Dev mode only** — the plugin runs under `vite` (`serve`); it is a no-op in production builds
-- **[Claude Code](https://claude.com/claude-code) CLI** — required *only* when using `generator: "claude-code"` (the `claude` command must be on your `PATH`). The default `mock` generator needs nothing extra.
+- **[Claude Code](https://claude.com/claude-code) CLI** — required _only_ when using `generator: "claude-code"` (the `claude` command must be on your `PATH`). The default `mock` generator needs nothing extra.
 
 For the demo in this repo you'll also need [pnpm](https://pnpm.io/) (the monorepo's package manager).
 
@@ -90,8 +90,8 @@ Because the package isn't on npm, reference it locally. If your app lives in thi
 // your-app/package.json
 {
   "dependencies": {
-    "vite-plugin-ui-variants": "workspace:*"
-  }
+    "vite-plugin-ui-variants": "workspace:*",
+  },
 }
 ```
 
@@ -100,8 +100,8 @@ For an app outside the monorepo, point at a local path (or a git URL) instead:
 ```jsonc
 {
   "dependencies": {
-    "vite-plugin-ui-variants": "file:../ai-ui-variants/packages/vite-plugin-ui-variants"
-  }
+    "vite-plugin-ui-variants": "file:../ai-ui-variants/packages/vite-plugin-ui-variants",
+  },
 }
 ```
 
@@ -142,7 +142,7 @@ The plugin only runs in `serve` (dev) mode.
 
 ### Options
 
-| Option               | Type                      | Default     | Description                                                         |
+| Option               | Type                      | Default     | Description                                                        |
 | -------------------- | ------------------------- | ----------- | ------------------------------------------------------------------ |
 | `generator`          | `"mock" \| "claude-code"` | `"mock"`    | Which variant generator to use.                                    |
 | `appRoot`            | `string`                  | Vite `root` | App root used to normalize `data-ui-source` paths.                 |
@@ -150,6 +150,10 @@ The plugin only runs in `serve` (dev) mode.
 | `promptContextPaths` | `string[]`                | `[]`        | Extra Markdown files (design rules, Tailwind notes, …) to pass in. |
 
 ## Generators
+
+Today the only real model integration is `claude-code`, backed by the Claude Code CLI.
+Other providers are not wired up yet; use `mock` when you want to try the loop without a
+model call.
 
 ### `mock` (default)
 
