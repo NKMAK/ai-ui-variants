@@ -54,7 +54,7 @@
 - [x] `pnpm --filter vite-plugin-ui-variants exec tsc --noEmit` を通す。
 - [x] `pnpm --filter demo-app exec tsc --noEmit` を通す。
 - [x] `git diff --check` を通す。
-- [ ] 変更をコミットする。
+- [x] 変更をコミットする。
 
 ## 後続候補
 
