@@ -4,10 +4,11 @@ export function Hero() {
   return (
     <section className="hero">
       <div className="hero-text">
-        <p className="eyebrow">// vite plugin · click → variant → pick</p>
+        <p className="eyebrow">// vite plugin · click → describe → pick</p>
         <h1 className="hero-title">
-          Click any UI element. <em>See three AI rewrites</em> in the screen you are
-          already using.
+          Point at any UI element, say what to change, then{" "}
+          <em>compare three AI rewrites</em> and keep the one that fits — without leaving
+          your app.
         </h1>
         <p className="hero-sub">
           Each variant is a real code change, applied via Fast Refresh. No mockups, no
