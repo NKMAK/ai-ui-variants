@@ -8,8 +8,10 @@ import { Spinner } from "../ui/Spinner.tsx";
 
 export function InstructionInput() {
   const [instruction, setInstruction] = useState("");
+  const [model, setModel] = useState("");
   const variants = useVariants();
   const trimmedInstruction = instruction.trim();
+  const selectedModel = model.trim();
   const disabled =
     variants.busy || sessionId.value === null || trimmedInstruction.length === 0;
 
@@ -20,7 +22,9 @@ export function InstructionInput() {
       return;
     }
 
-    submitInstruction(event, () => variants.generateInitial(trimmedInstruction));
+    submitInstruction(event, () =>
+      variants.generateInitial(trimmedInstruction, undefined, selectedModel),
+    );
   };
 
   const handleRegenerate = (event: Event): void => {
@@ -28,7 +32,9 @@ export function InstructionInput() {
       return;
     }
 
-    submitInstruction(event, () => variants.regenerate(trimmedInstruction));
+    submitInstruction(event, () =>
+      variants.regenerate(trimmedInstruction, undefined, selectedModel),
+    );
   };
 
   const handleRefine = (event: Event): void => {
@@ -36,7 +42,9 @@ export function InstructionInput() {
       return;
     }
 
-    submitInstruction(event, () => variants.refineCurrent(trimmedInstruction));
+    submitInstruction(event, () =>
+      variants.refineCurrent(trimmedInstruction, undefined, selectedModel),
+    );
   };
 
   return (
@@ -52,6 +60,19 @@ export function InstructionInput() {
         disabled={variants.busy}
         onInput={(event) => {
           setInstruction(event.currentTarget.value);
+        }}
+      />
+      <label className="instruction-input__label" htmlFor="ui-agent-model">
+        Model
+      </label>
+      <input
+        id="ui-agent-model"
+        className="instruction-input__model"
+        value={model}
+        disabled={variants.busy}
+        placeholder="Use server default"
+        onInput={(event) => {
+          setModel(event.currentTarget.value);
         }}
       />
       <div className="instruction-input__actions">

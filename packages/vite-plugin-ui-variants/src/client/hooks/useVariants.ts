@@ -1,9 +1,15 @@
-import type { GenerateMode, Variant } from "../../shared/types.ts";
+import type {
+  GenerateMode,
+  GenerationMetadata,
+  Session,
+  Variant,
+} from "../../shared/types.ts";
 import { postApply, postDiscard, postGenerate, postPreview } from "../api/client.ts";
 import {
   busy,
   busyMode,
   currentIndex,
+  generation,
   resetVariantState,
   selectedSource,
   sessionError,
@@ -17,6 +23,7 @@ export type UseVariantsResult = {
   variants: Variant[];
   currentIndex: number;
   currentVariant: Variant | null;
+  generation: GenerationMetadata | null;
   busy: boolean;
   busyMode: GenerateMode | null;
   canGoPrev: boolean;
@@ -27,9 +34,13 @@ export type UseVariantsResult = {
   canRegenerate: boolean;
   canRefineCurrent: boolean;
   canApply: boolean;
-  generateInitial: (instruction: string, count?: number) => Promise<void>;
-  regenerate: (instruction: string, count?: number) => Promise<void>;
-  refineCurrent: (instruction: string, count?: number) => Promise<void>;
+  generateInitial: (
+    instruction: string,
+    count?: number,
+    model?: string,
+  ) => Promise<void>;
+  regenerate: (instruction: string, count?: number, model?: string) => Promise<void>;
+  refineCurrent: (instruction: string, count?: number, model?: string) => Promise<void>;
   goPrev: () => Promise<void>;
   goNext: () => Promise<void>;
   preview: (variantId: string) => Promise<void>;
@@ -48,6 +59,7 @@ export function useVariants(): UseVariantsResult {
     variants: variantList,
     currentIndex: activeIndex,
     currentVariant: activeVariant,
+    generation: generation.value,
     busy: isBusy,
     busyMode: activeBusyMode,
     canGoPrev: findPreviewableIndex(variantList, activeIndex, -1) !== null,
@@ -61,8 +73,7 @@ export function useVariants(): UseVariantsResult {
       !isBusy &&
       activeVariant !== null &&
       isPreviewable(activeVariant),
-    canApply:
-      !isBusy && activeVariant !== null && isPreviewable(activeVariant),
+    canApply: !isBusy && activeVariant !== null && isPreviewable(activeVariant),
     generateInitial: generateReplace,
     regenerate: generateReplace,
     refineCurrent: generateRefine,
@@ -77,21 +88,24 @@ export function useVariants(): UseVariantsResult {
 async function generateReplace(
   instruction: string,
   count = DEFAULT_VARIANT_COUNT,
+  model?: string,
 ): Promise<void> {
-  await generate(instruction, "replace", count);
+  await generate(instruction, "replace", count, model);
 }
 
 async function generateRefine(
   instruction: string,
   count = DEFAULT_VARIANT_COUNT,
+  model?: string,
 ): Promise<void> {
-  await generate(instruction, "refine", count);
+  await generate(instruction, "refine", count, model);
 }
 
 async function generate(
   instruction: string,
   mode: GenerateMode,
   count: number,
+  model: string | undefined,
 ): Promise<void> {
   const activeSessionId = sessionId.value;
 
@@ -104,14 +118,20 @@ async function generate(
 
   try {
     await runExclusive(async () => {
-      const response = await postGenerate(activeSessionId, instruction, count, mode);
+      const response = await postGenerate(
+        activeSessionId,
+        instruction,
+        count,
+        mode,
+        model,
+      );
 
       if (!response.ok) {
         sessionError.value = response.error;
         return;
       }
 
-      syncVariants(response.variants, response.session.currentIndex);
+      syncSessionState(response.session);
 
       const firstReadyVariant = response.variants.find(isPreviewable);
 
@@ -216,7 +236,7 @@ async function previewUnlocked(
     return;
   }
 
-  syncVariants(response.session.variants, response.session.currentIndex);
+  syncSessionState(response.session);
   sessionError.value = null;
 }
 
@@ -255,6 +275,11 @@ function syncVariants(nextVariants: Variant[], nextIndex: number): void {
   }
 
   currentIndex.value = nextVariants.length > 0 ? 0 : -1;
+}
+
+function syncSessionState(session: Session): void {
+  generation.value = session.generation ?? null;
+  syncVariants(session.variants, session.currentIndex);
 }
 
 function findPreviewableIndex(

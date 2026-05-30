@@ -1,8 +1,12 @@
 import type { VariantOutput } from "../../shared/types.ts";
-import type { GenerateVariantsInput, VariantGenerator } from "./types.ts";
+import type {
+  GenerateVariantsInput,
+  GenerateVariantsResult,
+  VariantGenerator,
+} from "./types.ts";
 
 export class MockGenerator implements VariantGenerator {
-  async generate(input: GenerateVariantsInput): Promise<VariantOutput[]> {
+  async generate(input: GenerateVariantsInput): Promise<GenerateVariantsResult> {
     const file = input.selectedSource.file;
     const content = input.codeRange.content;
     const preferredIndex = input.codeRange.selectedLine - input.codeRange.startLine;
@@ -16,13 +20,16 @@ export class MockGenerator implements VariantGenerator {
     });
 
     if (candidate === null) {
-      return [];
+      return {
+        outputs: [],
+        generation: { model: "mock" },
+      };
     }
 
     const variants: VariantOutput[] = [
       {
         title: "Variant A",
-        description: "短く言い換える",
+        description: "Make the selected copy shorter.",
         changes: [
           {
             file,
@@ -37,7 +44,7 @@ export class MockGenerator implements VariantGenerator {
       },
       {
         title: "Variant B",
-        description: "強めに言い切る",
+        description: "Make the selected copy more direct.",
         changes: [
           {
             file,
@@ -52,7 +59,7 @@ export class MockGenerator implements VariantGenerator {
       },
       {
         title: "Variant C",
-        description: "丁寧に補足する",
+        description: "Add a softer prototype note.",
         changes: [
           {
             file,
@@ -67,7 +74,10 @@ export class MockGenerator implements VariantGenerator {
       },
     ];
 
-    return variants.slice(0, input.count);
+    return {
+      outputs: variants.slice(0, input.count),
+      generation: { model: "mock" },
+    };
   }
 }
 
@@ -168,5 +178,5 @@ function embolden(text: string): string {
 }
 
 function soften(text: string): string {
-  return `${text}（試作）`;
+  return `${text} (prototype)`;
 }

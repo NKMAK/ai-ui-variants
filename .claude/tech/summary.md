@@ -27,7 +27,7 @@
 | [git-worktree.md](git-worktree.md) | variantを隔離生成し `git diff` でpatch化。worktree base一致でconflictなく当たる。temp dir簡素化の代替も記載。 |
 | [hmr-fast-refresh.md](hmr-fast-refresh.md) | preview切替の仕組み。ファイル書込で自動発火。状態維持が効く条件（同一ファイル・構造を壊さない）。 |
 | [data-ui-source.md](data-ui-source.md) | UI→ソース位置の対応付け属性。dev 時に Vite `transform` hook が JSX intrinsic element へ自動注入する（手書きはなし）。server 側の path 検証と既知制約を含む。 |
-| [ai-mock-generator.md](ai-mock-generator.md) | AIは「変更後コード」を返し、patch化はサーバ側。generator interface・型・Claude Code prompt/model指定・patch検証（denylist等）。 |
+| [ai-mock-generator.md](ai-mock-generator.md) | AIは「変更後コード」を返し、patch化はサーバ側。generator interface・型・Claude Code prompt/model指定・usage metadata・patch検証（denylist等）。 |
 
 ---
 

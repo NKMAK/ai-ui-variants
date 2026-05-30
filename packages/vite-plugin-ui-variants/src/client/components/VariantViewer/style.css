@@ -25,6 +25,16 @@
   font-weight: 600;
 }
 
+.variant-viewer__generation {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 10px;
+  color: var(--ui-agent-text-muted);
+  font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  font-size: 11px;
+  line-height: 1.35;
+}
+
 .variant-viewer__title {
   display: flex;
   align-items: center;

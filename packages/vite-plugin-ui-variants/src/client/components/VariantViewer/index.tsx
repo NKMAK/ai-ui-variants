@@ -1,4 +1,6 @@
 /** @jsxImportSource preact */
+import type { TokenUsage } from "../../../shared/types.ts";
+
 import { useVariants } from "../../hooks/useVariants.ts";
 import { Button } from "../ui/Button.tsx";
 
@@ -22,6 +24,7 @@ export function VariantViewer() {
           {variants.readyCount} ready / {variants.failedCount} failed
         </span>
       </div>
+      <GenerationMeta />
       <h3 className="variant-viewer__title">
         {currentVariant.title}
         {isFailed ? <span className="variant-viewer__badge">failed</span> : null}
@@ -32,6 +35,24 @@ export function VariantViewer() {
       ) : null}
       <VariantNav />
     </section>
+  );
+}
+
+function GenerationMeta() {
+  const variants = useVariants();
+  const generation = variants.generation;
+
+  if (generation === null) {
+    return null;
+  }
+
+  const tokenSummary = formatTokenUsage(generation.tokenUsage);
+
+  return (
+    <div className="variant-viewer__generation">
+      <span>{generation.model}</span>
+      {tokenSummary === null ? null : <span>{tokenSummary}</span>}
+    </div>
   );
 }
 
@@ -60,4 +81,26 @@ function VariantNav() {
       </Button>
     </div>
   );
+}
+
+function formatTokenUsage(usage: TokenUsage | undefined): string | null {
+  if (usage === undefined) {
+    return null;
+  }
+
+  if (usage.totalTokens !== undefined) {
+    return `${formatNumber(usage.totalTokens)} tokens`;
+  }
+
+  if (usage.inputTokens !== undefined || usage.outputTokens !== undefined) {
+    return `${formatNumber(usage.inputTokens ?? 0)} in / ${formatNumber(
+      usage.outputTokens ?? 0,
+    )} out`;
+  }
+
+  return null;
+}
+
+function formatNumber(value: number): string {
+  return new Intl.NumberFormat("en-US").format(value);
 }

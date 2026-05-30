@@ -1,8 +1,17 @@
 import { spawn } from "node:child_process";
 
-import type { FileChange, FileEdit, VariantOutput } from "../../shared/types.ts";
+import type {
+  FileChange,
+  FileEdit,
+  TokenUsage,
+  VariantOutput,
+} from "../../shared/types.ts";
 import { buildPrompt } from "./prompt.ts";
-import type { GenerateVariantsInput, VariantGenerator } from "./types.ts";
+import type {
+  GenerateVariantsInput,
+  GenerateVariantsResult,
+  VariantGenerator,
+} from "./types.ts";
 
 const CLAUDE_TIMEOUT_MS = 180_000;
 const CLAUDE_MAX_BUFFER = 1024 * 1024 * 10;
@@ -28,14 +37,15 @@ export class ClaudeCodeGenerator implements VariantGenerator {
     this.#model = resolveClaudeModel();
   }
 
-  async generate(input: GenerateVariantsInput): Promise<VariantOutput[]> {
+  async generate(input: GenerateVariantsInput): Promise<GenerateVariantsResult> {
+    const model = resolveRequestedModel(input.model, this.#model);
     const prompt = await buildPrompt(input, {
       cwd: this.#cwd,
       promptTemplatePath: this.#promptTemplatePath,
       promptContextPaths: this.#promptContextPaths,
     });
-    const { stdout } = await this.#runClaude(prompt);
-    const resultText = extractClaudeResult(stdout);
+    const { stdout } = await this.#runClaude(prompt, model);
+    const { resultText, tokenUsage } = extractClaudeResponse(stdout);
     const parsed = parseVariantOutputs(resultText);
     const filtered = parsed.filter((variant) =>
       variant.changes.every((change) => change.file === input.selectedSource.file),
@@ -45,11 +55,17 @@ export class ClaudeCodeGenerator implements VariantGenerator {
       throw new Error("Claude Code returned no variants for the selected file.");
     }
 
-    return filtered.slice(0, input.count);
+    return {
+      outputs: filtered.slice(0, input.count),
+      generation: {
+        model,
+        ...(tokenUsage === undefined ? {} : { tokenUsage }),
+      },
+    };
   }
 
-  async #runClaude(prompt: string): Promise<{ stdout: string }> {
-    return runClaudeProcess(prompt, this.#cwd, this.#model);
+  async #runClaude(prompt: string, model: string): Promise<{ stdout: string }> {
+    return runClaudeProcess(prompt, this.#cwd, model);
   }
 }
 
@@ -130,7 +146,19 @@ function resolveClaudeModel(): string {
     : envModel;
 }
 
-function extractClaudeResult(stdout: string): string {
+function resolveRequestedModel(
+  model: string | undefined,
+  defaultModel: string,
+): string {
+  const trimmed = model?.trim();
+
+  return trimmed === undefined || trimmed.length === 0 ? defaultModel : trimmed;
+}
+
+function extractClaudeResponse(stdout: string): {
+  resultText: string;
+  tokenUsage?: TokenUsage;
+} {
   const trimmed = stdout.trim();
 
   if (trimmed.length === 0) {
@@ -140,7 +168,7 @@ function extractClaudeResult(stdout: string): string {
   const wrapper: unknown = parseJson(trimmed);
 
   if (wrapper === null) {
-    return trimmed;
+    return { resultText: trimmed };
   }
 
   const result = Array.isArray(wrapper)
@@ -148,7 +176,14 @@ function extractClaudeResult(stdout: string): string {
     : getResultField(wrapper);
 
   if (typeof result === "string") {
-    return result;
+    const tokenUsage = Array.isArray(wrapper)
+      ? findTokenUsage(wrapper)
+      : getTokenUsage(wrapper);
+
+    return {
+      resultText: result,
+      ...(tokenUsage === undefined ? {} : { tokenUsage }),
+    };
   }
 
   throw new Error("Claude Code JSON output did not include a string result field.");
@@ -307,12 +342,78 @@ function findResultField(events: unknown[]): unknown {
   return undefined;
 }
 
+function findTokenUsage(events: unknown[]): TokenUsage | undefined {
+  for (let index = events.length - 1; index >= 0; index -= 1) {
+    const tokenUsage = getTokenUsage(events[index]);
+
+    if (tokenUsage !== undefined) {
+      return tokenUsage;
+    }
+  }
+
+  return undefined;
+}
+
 function getResultField(value: unknown): unknown {
   if (!isRecord(value)) {
     return undefined;
   }
 
   return value.result;
+}
+
+function getTokenUsage(value: unknown): TokenUsage | undefined {
+  if (!isRecord(value)) {
+    return undefined;
+  }
+
+  const usage = parseTokenUsage(value.usage) ?? parseTokenUsage(value.total_usage);
+
+  if (usage !== undefined) {
+    return usage;
+  }
+
+  return parseTokenUsage(value);
+}
+
+function parseTokenUsage(value: unknown): TokenUsage | undefined {
+  if (!isRecord(value)) {
+    return undefined;
+  }
+
+  const usage: TokenUsage = {
+    inputTokens: readNumber(value.input_tokens),
+    outputTokens: readNumber(value.output_tokens),
+    cacheCreationInputTokens: readNumber(value.cache_creation_input_tokens),
+    cacheReadInputTokens: readNumber(value.cache_read_input_tokens),
+    totalTokens: readNumber(value.total_tokens),
+  };
+  const hasAnyUsage = Object.values(usage).some((item) => item !== undefined);
+
+  if (!hasAnyUsage) {
+    return undefined;
+  }
+
+  if (usage.totalTokens === undefined) {
+    let total = 0;
+
+    for (const item of [
+      usage.inputTokens,
+      usage.outputTokens,
+      usage.cacheCreationInputTokens,
+      usage.cacheReadInputTokens,
+    ]) {
+      total += item ?? 0;
+    }
+
+    usage.totalTokens = total;
+  }
+
+  return usage;
+}
+
+function readNumber(value: unknown): number | undefined {
+  return typeof value === "number" && Number.isFinite(value) ? value : undefined;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {
