@@ -134,6 +134,11 @@ export type DiscardSessionResponse = {
   session: Session;
 };
 
+export type DiscardActiveSessionResponse = {
+  ok: true;
+  session: Session | null;
+};
+
 export type GetSessionResponse = {
   ok: true;
   session: Session | null;

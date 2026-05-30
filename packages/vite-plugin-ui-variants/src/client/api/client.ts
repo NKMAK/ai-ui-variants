@@ -2,6 +2,7 @@ import { API_ENDPOINTS } from "../../constants.ts";
 import type {
   ApplyVariantResponse,
   ApiResponse,
+  DiscardActiveSessionResponse,
   DiscardSessionResponse,
   GenerateMode,
   GenerateVariantsResponse,
@@ -59,6 +60,15 @@ export async function postDiscard(
 ): Promise<ApiResponse<DiscardSessionResponse>> {
   return postJson<ApiResponse<DiscardSessionResponse>>(
     `${API_ENDPOINTS.session}/${activeSessionId}/discard`,
+    {},
+  );
+}
+
+export async function postDiscardActive(): Promise<
+  ApiResponse<DiscardActiveSessionResponse>
+> {
+  return postJson<ApiResponse<DiscardActiveSessionResponse>>(
+    `${API_ENDPOINTS.session}/discard-active`,
     {},
   );
 }
