@@ -5,7 +5,7 @@ export function Footer() {
         <em>Click.</em> Compare. Pick.
       </p>
       <span className="footer-glyph" aria-hidden>
-        ◐
+        
       </span>
       <p className="footer-meta">
         UI Variant Preview Agent
