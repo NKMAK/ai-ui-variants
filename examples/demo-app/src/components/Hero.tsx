@@ -2,7 +2,7 @@ import { PreviewCard } from "./PreviewCard";
 
 export function Hero() {
   return (
-    <section className="hero border border-[var(--line-strong)]">
+    <section className="hero">
       <div className="hero-text">
         <p className="eyebrow">// vite plugin · click → variant → pick</p>
         <h1 className="hero-title">
