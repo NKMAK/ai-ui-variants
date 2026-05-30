@@ -37,6 +37,7 @@ import {
   type SessionContext,
   type SessionState,
 } from "./session.ts";
+import { validateChangedFiles } from "./variantValidation.ts";
 import {
   applyChangesAndDiff,
   createWorktrees,
@@ -253,9 +254,10 @@ async function generateVariants(
 
       for (const variant of variants) {
         try {
+          const worktreeRoot = worktreeDir(context.repoRoot, sessionId, variant.id);
           const patch = applyChangesAndDiff(
             context.repoRoot,
-            worktreeDir(context.repoRoot, sessionId, variant.id),
+            worktreeRoot,
             variant.changes,
           );
           const patchPath = path.join(
@@ -264,15 +266,24 @@ async function generateVariants(
           );
           fs.writeFileSync(patchPath, patch, "utf8");
 
-          const validation = validatePatch(patch);
+          const patchValidation = validatePatch(patch);
 
-          if (validation.ok) {
-            variant.status = "ready";
-            variant.patchPath = patchPath;
-          } else {
+          if (!patchValidation.ok) {
             variant.status = "failed";
-            variant.error = validation.reason;
+            variant.error = patchValidation.reason;
+            continue;
           }
+
+          const syntaxValidation = validateChangedFiles(worktreeRoot, patch);
+
+          if (!syntaxValidation.ok) {
+            variant.status = "failed";
+            variant.error = syntaxValidation.reason;
+            continue;
+          }
+
+          variant.status = "ready";
+          variant.patchPath = patchPath;
         } catch (error: unknown) {
           variant.status = "failed";
           variant.error =

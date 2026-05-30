@@ -14,12 +14,22 @@ export function VariantViewer() {
     );
   }
 
+  const isFailed = currentVariant.status === "failed";
+
   return (
     <section className="variant-viewer" aria-live="polite">
       <div className="variant-viewer__meta">
-        Variant {variants.currentIndex + 1} / {variants.variants.length}
+        <span>
+          Variant {variants.currentIndex + 1} / {variants.variants.length}
+        </span>
+        <span className="variant-viewer__counts">
+          {variants.readyCount} ready / {variants.failedCount} failed
+        </span>
       </div>
-      <h3 className="variant-viewer__title">{currentVariant.title}</h3>
+      <h3 className="variant-viewer__title">
+        {currentVariant.title}
+        {isFailed ? <span className="variant-viewer__badge">failed</span> : null}
+      </h3>
       <p className="variant-viewer__description">{currentVariant.description}</p>
       {currentVariant.error ? (
         <p className="variant-viewer__error">{currentVariant.error}</p>

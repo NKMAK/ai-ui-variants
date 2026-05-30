@@ -20,8 +20,11 @@ export type UseVariantsResult = {
   canGoPrev: boolean;
   canGoNext: boolean;
   hasVariants: boolean;
+  readyCount: number;
+  failedCount: number;
   canRegenerate: boolean;
   canRefineCurrent: boolean;
+  canApply: boolean;
   generateInitial: (instruction: string, count?: number) => Promise<void>;
   regenerate: (instruction: string, count?: number) => Promise<void>;
   refineCurrent: (instruction: string, count?: number) => Promise<void>;
@@ -46,12 +49,16 @@ export function useVariants(): UseVariantsResult {
     canGoPrev: findPreviewableIndex(variantList, activeIndex, -1) !== null,
     canGoNext: findPreviewableIndex(variantList, activeIndex, 1) !== null,
     hasVariants: variantList.length > 0,
+    readyCount: variantList.filter(isPreviewable).length,
+    failedCount: variantList.filter((variant) => variant.status === "failed").length,
     canRegenerate: sessionId.value !== null && !isBusy,
     canRefineCurrent:
       sessionId.value !== null &&
       !isBusy &&
       activeVariant !== null &&
       isPreviewable(activeVariant),
+    canApply:
+      !isBusy && activeVariant !== null && isPreviewable(activeVariant),
     generateInitial: generateReplace,
     regenerate: generateReplace,
     refineCurrent: generateRefine,
@@ -102,7 +109,7 @@ async function generate(
     const firstReadyVariant = response.variants.find(isPreviewable);
 
     if (firstReadyVariant === undefined) {
-      sessionError.value = "No ready variants were generated.";
+      sessionError.value = "No previewable variants were generated.";
       return;
     }
 
@@ -222,7 +229,22 @@ async function runExclusive(operation: () => Promise<void>): Promise<void> {
 
 function syncVariants(nextVariants: Variant[], nextIndex: number): void {
   variants.value = nextVariants;
-  currentIndex.value = nextIndex >= 0 ? nextIndex : 0;
+
+  const requested = nextVariants[nextIndex];
+
+  if (nextIndex >= 0 && requested !== undefined && isPreviewable(requested)) {
+    currentIndex.value = nextIndex;
+    return;
+  }
+
+  const firstPreviewable = nextVariants.findIndex(isPreviewable);
+
+  if (firstPreviewable >= 0) {
+    currentIndex.value = firstPreviewable;
+    return;
+  }
+
+  currentIndex.value = nextVariants.length > 0 ? 0 : -1;
 }
 
 function findPreviewableIndex(
