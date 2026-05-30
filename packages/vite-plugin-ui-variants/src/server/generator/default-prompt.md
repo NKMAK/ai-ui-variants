@@ -20,6 +20,17 @@ Output schema:
 }
 ]
 
+Variant strategy:
+
+- The user instruction has a fixed part (what the user explicitly asked for) and an ambiguous part (everything they left open). The fixed part is a hard constraint that EVERY variant must satisfy. The ambiguous part is the room you are free to explore.
+- Produce {{variantCount}} variants that differ clearly from one another, spending that freedom in escalating amounts:
+  - Variant A: the most faithful reading. Honor the fixed part exactly and resolve any ambiguity in the most natural, restrained way. Minimal divergence.
+  - Variant B: still honor the fixed part, but resolve the ambiguity in a noticeably different direction, or add a small, tasteful change along another existing styling hook.
+  - Variant C: honor the fixed part, then push furthest. If the instruction is ambiguous, exploit that range to the fullest. If the instruction is already specific (little ambiguity), add your own bolder idea along a DIFFERENT styling hook that the instruction did not mention.
+- If there are more than 3 variants, scale boldness gradually from faithful to bold across them.
+- All exploration and any self-directed idea MUST stay within styling hooks that already exist near the selected line or are documented in the project context. Never invent new class names, props, tokens, colors, sizes, imports, or design-system APIs to create variety.
+- Never change or drop the fixed part of the instruction in any variant, including the bold one.
+
 Rules:
 
 - Return exactly {{variantCount}} variants if possible.
