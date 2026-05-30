@@ -19,8 +19,9 @@ export function Workflow() {
             <span className="step-num">02</span>
             <h3>Generate</h3>
             <p>
-              The local agent ships the minimum code range to Claude and asks for three
-              variants — text, className, props only.
+              The local agent ships the minimum code range to a pluggable generator (mock
+              by default, Claude Code optional) and asks for three variants — text,
+              className, props only.
             </p>
           </li>
           <li className="step">
@@ -35,8 +36,8 @@ export function Workflow() {
             <span className="step-num">04</span>
             <h3>Apply</h3>
             <p>
-              Pick the one that stuck. It is committed to your main worktree as a plain
-              diff. Discard the rest.
+              Pick the one that stuck. It is applied to your working tree as a plain diff —
+              never auto-committed. Discard the rest.
             </p>
           </li>
         </ol>

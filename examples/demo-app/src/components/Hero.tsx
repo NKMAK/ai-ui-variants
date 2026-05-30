@@ -11,18 +11,22 @@ export function Hero() {
         </h1>
         <p className="hero-sub">
           Each variant is a real code change, applied via Fast Refresh. No mockups, no
-          second window — your URL, auth, and form state stay put while you compare.
+          second window — your URL, auth, and form state stay put while you compare. Other
+          click-to-source tools jump you to the editor; this one rewrites, in place.
         </p>
         <div className="hero-ctas">
-          <button type="button" className="cta cta-primary">
+          <a className="cta cta-primary" href="#playground">
             See the demo
             <span className="arrow" aria-hidden>
               →
             </span>
-          </button>
-          <button type="button" className="cta cta-ghost">
-            Read the spec
-          </button>
+          </a>
+          <a
+            className="cta cta-ghost"
+            href="https://github.com/NKMAK/ai-ui-variants#readme"
+          >
+            Read the docs
+          </a>
         </div>
         <ul className="hero-meta">
           <li>

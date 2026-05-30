@@ -3,6 +3,7 @@ import { Masthead } from "./components/Masthead";
 import { Hero } from "./components/Hero";
 import { Workflow } from "./components/Workflow";
 import { Features } from "./components/Features";
+import { Safety } from "./components/Safety";
 import { Playground } from "./components/Playground";
 import { Footer } from "./components/Footer";
 
@@ -15,6 +16,7 @@ export function App() {
         <Hero />
         <Workflow />
         <Features />
+        <Safety />
         <Playground />
       </main>
       <Footer />
