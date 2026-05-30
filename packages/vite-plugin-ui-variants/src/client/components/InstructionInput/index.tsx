@@ -65,16 +65,20 @@ export function InstructionInput() {
       <label className="instruction-input__label" htmlFor="ui-agent-model">
         Model
       </label>
-      <input
+      <select
         id="ui-agent-model"
         className="instruction-input__model"
         value={model}
         disabled={variants.busy}
-        placeholder="Use server default"
-        onInput={(event) => {
+        onChange={(event) => {
           setModel(event.currentTarget.value);
         }}
-      />
+      >
+        <option value="">Server default (UI_VARIANTS_CLAUDE_MODEL)</option>
+        <option value="claude-haiku-4-5">claude-haiku-4-5</option>
+        <option value="claude-sonnet-4-5">claude-sonnet-4-5</option>
+        <option value="claude-opus-4-5">claude-opus-4-5</option>
+      </select>
       <div className="instruction-input__actions">
         {variants.hasVariants ? (
           <>
