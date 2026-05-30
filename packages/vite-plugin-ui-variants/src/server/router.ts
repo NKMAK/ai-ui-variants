@@ -22,7 +22,12 @@ import type {
 import { ClaudeCodeGenerator } from "./generator/claude-code.ts";
 import { MockGenerator } from "./generator/mock.ts";
 import type { VariantGenerator } from "./generator/types.ts";
-import { applyPatch, applyPatchContent, validatePatch } from "./patch.ts";
+import {
+  applyPatch,
+  applyPatchContent,
+  validatePatch,
+  validatePatchTargetRange,
+} from "./patch.ts";
 import { SourcePathError, patchesDir, resolveRepoRoot, worktreeDir } from "./paths.ts";
 import {
   ConflictError,
@@ -271,6 +276,17 @@ async function generateVariants(
           if (!patchValidation.ok) {
             variant.status = "failed";
             variant.error = patchValidation.reason;
+            continue;
+          }
+
+          const targetRangeValidation = validatePatchTargetRange(patch, {
+            startLine: state.codeRange.targetStartLine,
+            endLine: state.codeRange.targetEndLine,
+          });
+
+          if (!targetRangeValidation.ok) {
+            variant.status = "failed";
+            variant.error = targetRangeValidation.reason;
             continue;
           }
 

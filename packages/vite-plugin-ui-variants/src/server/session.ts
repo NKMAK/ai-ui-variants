@@ -3,10 +3,19 @@ import fs from "node:fs";
 import path from "node:path";
 import { randomUUID } from "node:crypto";
 
+import { parse } from "@babel/parser";
+import _traverse from "@babel/traverse";
+
 import type { SourceLocation, Session } from "../shared/types.ts";
 import type { CodeRange } from "./generator/types.ts";
 import { appToRepoPath, assertSafeAppRelPath, sessionDir } from "./paths.ts";
 import { restoreSnapshot, saveSnapshot } from "./snapshot.ts";
+
+type TraverseFn = typeof import("@babel/traverse").default;
+
+const traverse: TraverseFn =
+  (_traverse as unknown as { default?: TraverseFn }).default ??
+  (_traverse as TraverseFn);
 
 export type SessionContext = {
   appRoot: string;
@@ -51,7 +60,12 @@ export function startSession(
 
   const id = `session-${randomUUID()}`;
   const baseSnapshot = saveSnapshot(context.repoRoot, [repoRelFile]);
-  const codeRange = extractCodeRange(context.repoRoot, repoRelFile, source.line);
+  const codeRange = extractCodeRange(
+    context.repoRoot,
+    repoRelFile,
+    source.line,
+    source.column,
+  );
   const session: Session = {
     id,
     source,
@@ -119,6 +133,7 @@ export function refreshSessionCodeRange(
     context.repoRoot,
     repoRelFile,
     state.session.source.line,
+    state.session.source.column,
   );
 
   return state.codeRange;
@@ -143,19 +158,71 @@ export function extractCodeRange(
   repoRoot: string,
   repoRelFile: string,
   line: number,
+  column: number,
 ): CodeRange {
   const content = fs.readFileSync(path.join(repoRoot, repoRelFile), "utf8");
   const lines = content.split("\n");
   const startLine = Math.max(1, line - 25);
   const endLine = Math.min(lines.length, line + 25);
   const selectedLines = lines.slice(startLine - 1, endLine);
+  const targetRange = findTargetElementRange(content, line, column);
 
   return {
     file: repoRelFile,
     startLine,
     endLine,
     selectedLine: line,
+    targetStartLine: targetRange.startLine,
+    targetEndLine: targetRange.endLine,
     content: selectedLines.join("\n"),
+  };
+}
+
+function findTargetElementRange(
+  content: string,
+  line: number,
+  column: number,
+): { startLine: number; endLine: number } {
+  try {
+    const ast = parse(content, {
+      sourceType: "module",
+      allowReturnOutsideFunction: true,
+      plugins: ["jsx", "typescript"],
+    });
+    let targetRange: { startLine: number; endLine: number } | null = null;
+
+    traverse(ast, {
+      JSXElement(nodePath) {
+        const loc = nodePath.node.loc;
+        const openingStart = nodePath.node.openingElement.loc?.start;
+
+        if (
+          loc == null ||
+          openingStart === undefined ||
+          openingStart.line !== line ||
+          openingStart.column + 1 !== column
+        ) {
+          return;
+        }
+
+        targetRange = {
+          startLine: loc.start.line,
+          endLine: loc.end.line,
+        };
+        nodePath.stop();
+      },
+    });
+
+    if (targetRange !== null) {
+      return targetRange;
+    }
+  } catch {
+    // Fall back to a tight line window if the file is temporarily unparsable.
+  }
+
+  return {
+    startLine: Math.max(1, line - 2),
+    endLine: line + 2,
   };
 }
 

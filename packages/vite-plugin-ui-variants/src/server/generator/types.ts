@@ -5,6 +5,8 @@ export type CodeRange = {
   startLine: number;
   endLine: number;
   selectedLine: number;
+  targetStartLine: number;
+  targetEndLine: number;
   content: string;
 };
 

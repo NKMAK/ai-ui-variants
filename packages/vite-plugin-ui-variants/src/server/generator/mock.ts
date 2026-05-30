@@ -6,7 +6,14 @@ export class MockGenerator implements VariantGenerator {
     const file = input.selectedSource.file;
     const content = input.codeRange.content;
     const preferredIndex = input.codeRange.selectedLine - input.codeRange.startLine;
-    const candidate = pickTextChange(content, preferredIndex);
+    const targetStartIndex =
+      input.codeRange.targetStartLine - input.codeRange.startLine;
+    const targetEndIndex = input.codeRange.targetEndLine - input.codeRange.startLine;
+    const candidate = pickTextChange(content, {
+      preferredIndex,
+      targetStartIndex,
+      targetEndIndex,
+    });
 
     if (candidate === null) {
       return [];
@@ -75,11 +82,19 @@ const TEXT_LINE_PATTERN = /^(\s*)([^\s<>{}][^<>{}]*?)$/;
 
 function pickTextChange(
   content: string,
-  preferredIndex: number,
+  options: {
+    preferredIndex: number;
+    targetStartIndex: number;
+    targetEndIndex: number;
+  },
 ): TextChangeCandidate | null {
   const lines = content.split("\n");
 
-  for (const lineIndex of lineIndexesByDistance(lines.length, preferredIndex)) {
+  for (const lineIndex of lineIndexesByDistance(lines.length, options.preferredIndex)) {
+    if (lineIndex < options.targetStartIndex || lineIndex > options.targetEndIndex) {
+      continue;
+    }
+
     const rawLine = lines[lineIndex];
 
     if (rawLine === undefined) {

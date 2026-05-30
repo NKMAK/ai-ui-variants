@@ -62,6 +62,8 @@ function renderPrompt(
       startLine: input.codeRange.startLine,
       endLine: input.codeRange.endLine,
       selectedLine: input.codeRange.selectedLine,
+      targetStartLine: input.codeRange.targetStartLine,
+      targetEndLine: input.codeRange.targetEndLine,
       content: input.codeRange.content,
     },
     null,

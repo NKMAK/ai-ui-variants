@@ -36,6 +36,7 @@ export function Playground() {
           <label className="field">
             <span className="field-label">Notes</span>
             <textarea
+              style={{ border: "2px solid #FF8C00", borderRadius: "12px" }}
               value={note}
               onChange={(event) => setNote(event.currentTarget.value)}
               placeholder="A title idea. A todo. Anything that should outlive a variant swap."

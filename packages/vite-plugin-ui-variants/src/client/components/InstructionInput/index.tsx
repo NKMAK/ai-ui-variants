@@ -58,18 +58,18 @@ export function InstructionInput() {
         {variants.hasVariants ? (
           <>
             <Button
-              variant="ghost"
+              variant="primary"
               disabled={disabled || !variants.canRegenerate}
               onClick={handleRegenerate}
             >
+              {variants.busy ? <Spinner /> : null}
               Regenerate
             </Button>
             <Button
-              variant="primary"
+              variant="ghost"
               disabled={disabled || !variants.canRefineCurrent}
               onClick={handleRefine}
             >
-              {variants.busy ? <Spinner /> : null}
               Refine current
             </Button>
           </>
