@@ -42,7 +42,7 @@ export function InstructionInput() {
   return (
     <form className="instruction-input" onSubmit={handleSubmit}>
       <label className="instruction-input__label" htmlFor="ui-agent-instruction">
-        指示
+        Instruction
       </label>
       <textarea
         id="ui-agent-instruction"

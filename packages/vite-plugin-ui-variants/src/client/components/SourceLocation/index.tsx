@@ -12,8 +12,8 @@ export function SourceLocation({ embedded = false }: SourceLocationProps) {
     return null;
   }
 
-  const id = sessionId.value;
   const error = sessionError.value;
+  const status = error ?? (sessionId.value === null ? "Starting session..." : null);
 
   return (
     <section
@@ -24,13 +24,15 @@ export function SourceLocation({ embedded = false }: SourceLocationProps) {
       <div className="source-location__path">
         {source.file}:{source.line}:{source.column}
       </div>
-      <div
-        className={
-          error ? "source-location__status is-error" : "source-location__status"
-        }
-      >
-        {error ?? (id === null ? "Starting session..." : `Session ${id}`)}
-      </div>
+      {status === null ? null : (
+        <div
+          className={
+            error ? "source-location__status is-error" : "source-location__status"
+          }
+        >
+          {status}
+        </div>
+      )}
     </section>
   );
 }

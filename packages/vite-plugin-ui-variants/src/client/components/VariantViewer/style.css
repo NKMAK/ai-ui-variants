@@ -7,7 +7,6 @@
   background: rgba(255, 255, 255, 0.05);
 }
 
-.variant-viewer__empty,
 .variant-viewer__meta {
   color: var(--ui-agent-text-muted);
   font-size: 12px;

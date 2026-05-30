@@ -7,11 +7,7 @@ export function VariantViewer() {
   const currentVariant = variants.currentVariant;
 
   if (currentVariant === null) {
-    return (
-      <section className="variant-viewer" aria-live="polite">
-        <div className="variant-viewer__empty">No variants yet</div>
-      </section>
-    );
+    return null;
   }
 
   const isFailed = currentVariant.status === "failed";

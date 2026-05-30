@@ -11,7 +11,7 @@ export const sessionError = signal<string | null>(null);
 export const variants = signal<Variant[]>([]);
 export const currentIndex = signal(0);
 export const busy = signal(false);
-// 実行中の生成モード。押した操作のボタンにだけスピナーを出すために使う。
+// Tracks the active generate mode so only the clicked action shows a spinner.
 export const busyMode = signal<GenerateMode | null>(null);
 
 export function toggleInspector(): void {
