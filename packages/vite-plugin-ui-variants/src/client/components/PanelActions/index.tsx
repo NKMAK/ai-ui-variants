@@ -4,13 +4,12 @@ import { Button } from "../ui/Button.tsx";
 
 export function PanelActions() {
   const variants = useVariants();
-  const hasVariant = variants.currentVariant !== null;
 
   return (
     <div className="panel-actions">
       <Button
         variant="primary"
-        disabled={variants.busy || !hasVariant}
+        disabled={!variants.canApply}
         onClick={() => {
           void variants.apply();
         }}

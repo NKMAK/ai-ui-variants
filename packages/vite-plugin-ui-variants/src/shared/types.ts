@@ -23,6 +23,19 @@ export type VariantOutput = {
 export type UiVariantGeneratorKind = "mock" | "claude-code";
 export type GenerateMode = "replace" | "refine";
 
+export type TokenUsage = {
+  inputTokens?: number;
+  outputTokens?: number;
+  cacheCreationInputTokens?: number;
+  cacheReadInputTokens?: number;
+  totalTokens?: number;
+};
+
+export type GenerationMetadata = {
+  model: string;
+  tokenUsage?: TokenUsage;
+};
+
 export type UiVariantsOptions = {
   appRoot?: string;
   generator?: UiVariantGeneratorKind;
@@ -52,6 +65,7 @@ export type Session = {
   id: string;
   source: SourceLocation;
   instruction: string;
+  generation?: GenerationMetadata;
   baseSnapshot: Record<string, string>;
   variants: Variant[];
   currentIndex: number;
@@ -80,6 +94,7 @@ export type GenerateVariantsRequest = {
   instruction: string;
   count?: number;
   mode?: GenerateMode;
+  model?: string;
 };
 
 export type GenerateVariantsResponse = {

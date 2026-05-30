@@ -22,7 +22,12 @@ import type {
 import { ClaudeCodeGenerator } from "./generator/claude-code.ts";
 import { MockGenerator } from "./generator/mock.ts";
 import type { VariantGenerator } from "./generator/types.ts";
-import { applyPatch, applyPatchContent, validatePatch } from "./patch.ts";
+import {
+  applyPatch,
+  applyPatchContent,
+  validatePatch,
+  validatePatchTargetRange,
+} from "./patch.ts";
 import { SourcePathError, patchesDir, resolveRepoRoot, worktreeDir } from "./paths.ts";
 import {
   ConflictError,
@@ -37,6 +42,7 @@ import {
   type SessionContext,
   type SessionState,
 } from "./session.ts";
+import { validateChangedFiles } from "./variantValidation.ts";
 import {
   applyChangesAndDiff,
   createWorktrees,
@@ -149,6 +155,7 @@ async function handleRequest(
       generateBody.instruction,
       generateBody.count,
       generateBody.mode,
+      generateBody.model,
     );
     sendJson<GenerateVariantsResponse>(res, 200, {
       ok: true,
@@ -220,6 +227,7 @@ async function generateVariants(
   instruction: string,
   count: number,
   mode: GenerateMode,
+  model: string | undefined,
 ): Promise<Session> {
   return withSessionLock(context, sessionId, async (state) => {
     state.session.status = "generating";
@@ -228,7 +236,7 @@ async function generateVariants(
 
     try {
       const seedPatch = prepareGenerationBase(context, state, mode);
-      const outputs = await generator.generate({
+      const result = await generator.generate({
         instruction,
         selectedSource: {
           ...state.session.source,
@@ -236,8 +244,9 @@ async function generateVariants(
         },
         codeRange: state.codeRange,
         count,
+        model,
       });
-      const variants: Variant[] = outputs.map((output, index) => ({
+      const variants: Variant[] = result.outputs.map((output, index) => ({
         ...output,
         id: `variant-${index + 1}`,
         status: "pending",
@@ -253,9 +262,10 @@ async function generateVariants(
 
       for (const variant of variants) {
         try {
+          const worktreeRoot = worktreeDir(context.repoRoot, sessionId, variant.id);
           const patch = applyChangesAndDiff(
             context.repoRoot,
-            worktreeDir(context.repoRoot, sessionId, variant.id),
+            worktreeRoot,
             variant.changes,
           );
           const patchPath = path.join(
@@ -264,15 +274,39 @@ async function generateVariants(
           );
           fs.writeFileSync(patchPath, patch, "utf8");
 
-          const validation = validatePatch(patch);
+          const patchValidation = validatePatch(patch);
 
-          if (validation.ok) {
-            variant.status = "ready";
-            variant.patchPath = patchPath;
-          } else {
+          if (!patchValidation.ok) {
             variant.status = "failed";
-            variant.error = validation.reason;
+            variant.error = patchValidation.reason;
+            continue;
           }
+
+          const targetRangeValidation = validatePatchTargetRange(
+            patch,
+            {
+              startLine: state.codeRange.targetStartLine,
+              endLine: state.codeRange.targetEndLine,
+            },
+            state.codeRange.file,
+          );
+
+          if (!targetRangeValidation.ok) {
+            variant.status = "failed";
+            variant.error = targetRangeValidation.reason;
+            continue;
+          }
+
+          const syntaxValidation = validateChangedFiles(worktreeRoot, patch);
+
+          if (!syntaxValidation.ok) {
+            variant.status = "failed";
+            variant.error = syntaxValidation.reason;
+            continue;
+          }
+
+          variant.status = "ready";
+          variant.patchPath = patchPath;
         } catch (error: unknown) {
           variant.status = "failed";
           variant.error =
@@ -281,6 +315,7 @@ async function generateVariants(
       }
 
       state.session.variants = variants;
+      state.session.generation = result.generation;
       state.session.currentIndex = -1;
       state.session.status = variants.some((variant) => variant.status === "ready")
         ? "ready"
@@ -496,8 +531,10 @@ function normalizeGenerateBody(body: GenerateBody): {
   instruction: string;
   count: number;
   mode: GenerateMode;
+  model: string | undefined;
 } {
   const mode = body.mode ?? "replace";
+  const model = body.model?.trim();
 
   if (mode !== "replace" && mode !== "refine") {
     throw new Error("Invalid generate mode.");
@@ -507,6 +544,7 @@ function normalizeGenerateBody(body: GenerateBody): {
     instruction: body.instruction ?? "",
     count: body.count ?? 3,
     mode,
+    model: model === undefined || model.length === 0 ? undefined : model,
   };
 }
 

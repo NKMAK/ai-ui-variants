@@ -22,7 +22,8 @@ MVPの初期段階では固定patchを返すmockから始め、現在は `mock` 
 
 - 実行コマンド: `claude -p <prompt> --output-format json --allowedTools "" --model <model>`
 - 既定 model: `claude-haiku-4-5`
-- model override: `UI_VARIANTS_CLAUDE_MODEL`
+- model override: generation request の `model` が最優先。未指定時は `UI_VARIANTS_CLAUDE_MODEL`、さらに未指定なら既定 model。
+- usage metadata: Claude Code の JSON wrapper に token usage が含まれる場合、server が抽出して session に保存し、overlay に表示する。
 - prompt assembly: `src/server/generator/prompt.ts`
 - package default prompt: `src/server/generator/default-prompt.md`
 - host app prompt override: plugin option `promptTemplatePath`

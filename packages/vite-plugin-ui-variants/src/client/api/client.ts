@@ -26,10 +26,11 @@ export async function postGenerate(
   instruction: string,
   count: number,
   mode: GenerateMode,
+  model?: string,
 ): Promise<ApiResponse<GenerateVariantsResponse>> {
   return postJson<ApiResponse<GenerateVariantsResponse>>(
     `${API_ENDPOINTS.session}/${activeSessionId}/generate-variants`,
-    { instruction, count, mode },
+    { instruction, count, mode, model },
   );
 }
 

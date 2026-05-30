@@ -12,6 +12,11 @@ export type PatchValidationResult =
       reason: string;
     };
 
+export type TargetLineRange = {
+  startLine: number;
+  endLine: number;
+};
+
 export function extractTouchedFiles(patch: string): string[] {
   const touchedFiles = new Set<string>();
 
@@ -64,6 +69,109 @@ export function validatePatch(patch: string): PatchValidationResult {
   return { ok: true };
 }
 
+export function validatePatchTargetRange(
+  patch: string,
+  targetRange: TargetLineRange,
+  targetFile: string,
+): PatchValidationResult {
+  const normalizedTarget = normalizePath(targetFile);
+
+  // patch をファイル単位に割って、target file のチャンクだけ行範囲を検査する。
+  // チャンク内は単一ファイルなので、`--- a/` `+++ b/` ヘッダは hunk より前
+  // （inHunk=false）に現れ、変更行として誤計上されない。
+  for (const chunk of splitPatchByFile(patch)) {
+    const chunkFile = extractChunkFile(chunk);
+
+    if (chunkFile === undefined || normalizePath(chunkFile) !== normalizedTarget) {
+      continue;
+    }
+
+    const result = validateChunkTargetRange(chunk, targetRange);
+
+    if (!result.ok) {
+      return result;
+    }
+  }
+
+  return { ok: true };
+}
+
+function splitPatchByFile(patch: string): string[] {
+  return patch
+    .split(/\n(?=diff --git )/)
+    .filter((chunk) => chunk.startsWith("diff --git "));
+}
+
+function extractChunkFile(chunk: string): string | undefined {
+  const lines = chunk.split("\n");
+
+  for (const line of lines) {
+    if (line.startsWith("+++ b/")) {
+      return line.slice("+++ b/".length);
+    }
+  }
+
+  const match = /^diff --git a\/(.+) b\/(.+)$/.exec(lines[0] ?? "");
+
+  return match?.[2] ?? match?.[1];
+}
+
+function validateChunkTargetRange(
+  chunk: string,
+  targetRange: TargetLineRange,
+): PatchValidationResult {
+  let oldLine = 0;
+  let inHunk = false;
+
+  for (const line of chunk.split("\n")) {
+    if (line.startsWith("@@ ")) {
+      const match = /^@@ -(\d+)(?:,\d+)? \+\d+(?:,\d+)? @@/.exec(line);
+
+      if (match === null) {
+        inHunk = false;
+        continue;
+      }
+
+      oldLine = Number(match[1]);
+      inHunk = true;
+      continue;
+    }
+
+    if (!inHunk || line.startsWith("\\ No newline")) {
+      continue;
+    }
+
+    if (line.startsWith("-")) {
+      if (!isWithinTargetRange(oldLine, targetRange)) {
+        return {
+          ok: false,
+          reason: `Patch changes line ${oldLine}, outside selected element lines ${targetRange.startLine}-${targetRange.endLine}.`,
+        };
+      }
+
+      oldLine += 1;
+      continue;
+    }
+
+    if (line.startsWith("+")) {
+      const insertionLine = oldLine;
+
+      if (!isInsertionWithinTargetRange(insertionLine, targetRange)) {
+        return {
+          ok: false,
+          reason: `Patch adds near line ${insertionLine}, outside selected element lines ${targetRange.startLine}-${targetRange.endLine}.`,
+        };
+      }
+
+      continue;
+    }
+
+    oldLine += 1;
+  }
+
+  return { ok: true };
+}
+
 export function applyPatch(repoRoot: string, patchPath: string): void {
   execFileSync("git", ["-C", repoRoot, "apply", patchPath], {
     stdio: "pipe",
@@ -91,6 +199,17 @@ function isDeniedFile(repoRelFile: string): boolean {
   const normalizedFile = normalizePath(repoRelFile);
 
   return DENYLIST.some((pattern) => matchesDenyPattern(normalizedFile, pattern));
+}
+
+function isWithinTargetRange(line: number, targetRange: TargetLineRange): boolean {
+  return line >= targetRange.startLine && line <= targetRange.endLine;
+}
+
+function isInsertionWithinTargetRange(
+  line: number,
+  targetRange: TargetLineRange,
+): boolean {
+  return line >= targetRange.startLine && line <= targetRange.endLine + 1;
 }
 
 function matchesDenyPattern(repoRelFile: string, pattern: string): boolean {

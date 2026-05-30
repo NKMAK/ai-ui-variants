@@ -1,17 +1,18 @@
 /** @jsxImportSource preact */
-import { hoveredRect, selectedRect } from "../../store/overlayStore.ts";
+import { hoveredRect, selectedRect, variants } from "../../store/overlayStore.ts";
 
 export function Inspector() {
   const hover = hoveredRect.value;
   const selected = selectedRect.value;
+  const hasVariants = variants.value.length > 0;
 
-  if (!isVisibleRect(hover) && !isVisibleRect(selected)) {
+  if (!isVisibleRect(hover) && (!isVisibleRect(selected) || hasVariants)) {
     return null;
   }
 
   return (
     <>
-      {isVisibleRect(selected) ? (
+      {isVisibleRect(selected) && !hasVariants ? (
         <HighlightBox rect={selected} className="inspector-highlight is-selected" />
       ) : null}
       {isVisibleRect(hover) ? (
