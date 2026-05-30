@@ -17,19 +17,21 @@ export function Workflow() {
           </li>
           <li className="step">
             <span className="step-num">02</span>
-            <h3>Generate</h3>
+            <h3>Instruct</h3>
             <p>
-              The local agent ships the minimum code range to a pluggable generator
-              (mock by default; Claude Code is the only real model adapter today) and
-              asks for three variants — text, className, props only.
+              Tell the AI what to change. The local agent ships only the minimum
+              code range — text, className, props — to a pluggable generator
+              (mock by default; Claude Code is the only real model adapter today)
+              and asks for multiple variants.
             </p>
           </li>
           <li className="step">
             <span className="step-num">03</span>
-            <h3>Preview</h3>
+            <h3>Compare</h3>
             <p>
-              The selected patch is applied to your dev server. Fast Refresh swaps the
-              screen in place — your input state stays put.
+              Variants land directly in the running app. Flip between them in
+              place — your form values, route, and scroll position stay where you
+              left them.
             </p>
           </li>
           <li className="step">
