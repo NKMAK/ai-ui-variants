@@ -16,6 +16,9 @@ The AI never writes diffs. It returns the changed code (as search/replace blocks
 
 ## Demo
 
+https://github.com/user-attachments/assets/c611c584-8342-41a0-9366-16d5588960c2
+
+
 A public landing page (display only — the local agent overlay does not run there) is published via GitHub Pages:
 
 👉 **https://nkmak.github.io/ai-ui-variants/**
