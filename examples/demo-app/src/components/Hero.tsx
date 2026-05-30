@@ -4,25 +4,28 @@ export function Hero() {
   return (
     <section className="hero">
       <div className="hero-text">
-        <p className="eyebrow">// vite plugin · click → variant → pick</p>
+        <p className="eyebrow">// vite plugin · click → describe → pick</p>
         <h1 className="hero-title">
-          Click any UI element. <em>See three AI rewrites</em> in the screen you are
-          already using.
+          Click a UI element. <em>Get three AI rewrites.</em>
         </h1>
         <p className="hero-sub">
-          Each variant is a real code change, applied via Fast Refresh. No mockups, no
-          second window — your URL, auth, and form state stay put while you compare.
+          Say what to change, compare the variants in place, and keep the one that fits —
+          without leaving the app you are already running. Your URL, auth, and form state
+          stay put.
         </p>
         <div className="hero-ctas">
-          <button type="button" className="cta cta-primary">
+          <a className="cta cta-primary" href="#playground">
             See the demo
             <span className="arrow" aria-hidden>
               →
             </span>
-          </button>
-          <button type="button" className="cta cta-ghost">
-            Read the spec
-          </button>
+          </a>
+          <a
+            className="cta cta-ghost"
+            href="https://github.com/NKMAK/ai-ui-variants#readme"
+          >
+            Read the docs
+          </a>
         </div>
         <ul className="hero-meta">
           <li>

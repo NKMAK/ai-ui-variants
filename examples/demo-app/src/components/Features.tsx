@@ -22,8 +22,8 @@ export function Features() {
           <span className="feature-num">F · 02</span>
           <h3>Code-backed variants</h3>
           <p>
-            Claude returns search-and-replace blocks. The server turns them into git
-            diffs deterministically. The model never writes the patch itself.
+            The generator returns search-and-replace blocks. The server turns them into
+            git diffs deterministically — the model never writes the patch itself.
           </p>
           <span className="feature-tag">git diff · search/replace</span>
         </article>

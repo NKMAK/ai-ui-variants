@@ -8,7 +8,7 @@ export function Footer() {
         
       </span>
       <p className="footer-meta">
-        UI Variant Preview Agent
+        ai-ui-variants
         <br />
         MIT · 2026
       </p>

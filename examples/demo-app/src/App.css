@@ -183,7 +183,7 @@ button {
 }
 
 .hero::before {
-  content: "01 / 04";
+  content: "01 / 05";
   position: absolute;
   top: 88px;
   right: 44px;
@@ -777,6 +777,101 @@ button {
   color: var(--vermillion);
 }
 
+/* ============ Safety ============ */
+
+.safety-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1px;
+  background: var(--line);
+  border: 1px solid var(--line);
+  margin-bottom: 40px;
+}
+
+.safety-item {
+  background: var(--paper);
+  padding: 30px 26px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  transition: background 0.2s ease;
+}
+
+.safety-item:hover {
+  background: var(--paper-warm);
+}
+
+.safety-num {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.18em;
+  color: var(--vermillion);
+  text-transform: uppercase;
+}
+
+.safety-item h3 {
+  font-family: var(--serif);
+  font-variation-settings:
+    "opsz" 48,
+    "SOFT" 80,
+    "wght" 400;
+  font-size: 1.3rem;
+  line-height: 1.1;
+  letter-spacing: -0.015em;
+  margin: 0;
+}
+
+.safety-item p {
+  margin: 0;
+  color: var(--ink-soft);
+  font-size: 0.92rem;
+  line-height: 1.55;
+}
+
+.safety-item code {
+  font-family: var(--mono);
+  font-size: 0.85em;
+  background: var(--paper-warm);
+  padding: 1px 6px;
+  border-radius: 2px;
+  color: var(--vermillion-deep);
+  letter-spacing: 0;
+}
+
+.req-chips {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.req-label {
+  color: var(--muted);
+  margin-right: 4px;
+}
+
+.req-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 12px;
+  border: 1px solid var(--line-strong);
+  border-radius: 999px;
+  color: var(--ink-soft);
+}
+
+.req-chip::before {
+  content: "";
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--vermillion);
+}
+
 /* ============ Playground ============ */
 
 .playground-grid {
@@ -1047,6 +1142,10 @@ button {
   .feature:nth-child(n) {
     grid-column: span 1;
     min-height: 0;
+  }
+
+  .safety-grid {
+    grid-template-columns: 1fr;
   }
 
   .playground-grid {

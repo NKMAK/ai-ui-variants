@@ -17,10 +17,18 @@ export function Playground() {
             right here, in the page you are reading.
           </p>
           <ul>
-            <li>Hero headline · rewrite the lead.</li>
-            <li>Workflow cards · try a tighter, sharper tone.</li>
-            <li>Feature titles · explore alternative voicings.</li>
-            <li>Footer tag · A/B/C in three keystrokes.</li>
+            <li>
+              <strong>01 Hero headline</strong> · rewrite the lead.
+            </li>
+            <li>
+              <strong>02 Workflow cards</strong> · try a tighter, sharper tone.
+            </li>
+            <li>
+              <strong>03 Feature titles</strong> · explore alternative voicings.
+            </li>
+            <li>
+              <strong>04 Footer tag</strong> · A/B/C in three keystrokes.
+            </li>
           </ul>
         </div>
 

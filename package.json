@@ -3,6 +3,7 @@
   "private": true,
   "packageManager": "pnpm@10.33.0",
   "scripts": {
+    "eval:variants": "playwright test --config scripts/variant-eval/playwright.config.ts",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "lint": "eslint .",
@@ -10,6 +11,7 @@
     "typecheck": "pnpm -r exec tsc --noEmit"
   },
   "devDependencies": {
+    "@playwright/test": "^1.60.0",
     "@eslint/js": "^10.0.1",
     "@types/node": "^25.9.1",
     "eslint": "^10.4.0",
