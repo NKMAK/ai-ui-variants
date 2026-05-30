@@ -47,18 +47,74 @@ The tool is one Vite plugin wrapping three cooperating pieces:
 
 At build time, the plugin's `transform` hook auto-annotates intrinsic JSX elements with a `data-ui-source` attribute (app-root-relative path + line/column) so the overlay can map a click back to source.
 
-## Quick start
+## Requirements
 
-Requirements: Node 20+, [pnpm](https://pnpm.io/).
+This plugin targets a specific dev setup. Make sure your project meets all of these:
+
+- **Node.js 20+**
+- **Vite 7** (`vite@^7.0.0`, declared as a peer dependency)
+- **React** via [`@vitejs/plugin-react`](https://github.com/vitejs/vite-plugin-react) — the live-preview loop relies on Fast Refresh to keep component state across variants
+- **A git repository** — variants are isolated with `git worktree` and turned into patches with `git diff`
+- **Dev mode only** — the plugin runs under `vite` (`serve`); it is a no-op in production builds
+- **[Claude Code](https://claude.com/claude-code) CLI** — required *only* when using `generator: "claude-code"` (the `claude` command must be on your `PATH`). The default `mock` generator needs nothing extra.
+
+For the demo in this repo you'll also need [pnpm](https://pnpm.io/) (the monorepo's package manager).
+
+## Setup
+
+> **Note:** this package is not published to npm yet. For now, use it inside this repository (run the demo) or wire it into your own app via a workspace/local reference, as described below.
+
+### 1. Clone and install
 
 ```bash
+git clone https://github.com/NKMAK/ai-ui-variants.git
+cd ai-ui-variants
 pnpm install
+```
 
-# Run the editable demo (overlay enabled)
+### 2. Run the demo
+
+```bash
 pnpm --filter demo-app dev
 ```
 
-Open the dev server, toggle the overlay on, and click an element marked with `data-ui-source` (Hero, CTA, feature cards, the Playground form, …) to generate and preview variants.
+Open the dev server URL, toggle the overlay on, and click an element marked with `data-ui-source` (Hero, CTA, feature cards, the Playground form, …) to generate and preview variants. This is the fastest way to see the full loop.
+
+The demo is configured with the `claude-code` generator, so to actually generate variants you need the [Claude Code](https://claude.com/claude-code) CLI installed (see [Requirements](#requirements)). Switch the demo's `vite.config.ts` to `generator: "mock"` if you just want to try the overlay without a model.
+
+### 3. Add it to your own app
+
+Because the package isn't on npm, reference it locally. If your app lives in this monorepo, add it as a workspace dependency:
+
+```jsonc
+// your-app/package.json
+{
+  "dependencies": {
+    "vite-plugin-ui-variants": "workspace:*"
+  }
+}
+```
+
+For an app outside the monorepo, point at a local path (or a git URL) instead:
+
+```jsonc
+{
+  "dependencies": {
+    "vite-plugin-ui-variants": "file:../ai-ui-variants/packages/vite-plugin-ui-variants"
+  }
+}
+```
+
+Run `pnpm install`, then register the plugin in your Vite config (see [Usage](#usage)).
+
+### 4. Configure the generator (optional)
+
+The default generator is `mock` and needs no setup. To use Claude Code, install the CLI, set `generator: "claude-code"`, and add the prompt files referenced by your config:
+
+- `.ui-variants/claude-code-prompt.md` — prompt template (placeholders filled by the server)
+- `.ui-variants/project-context.md` — extra context (design rules, Tailwind conventions, …)
+
+You can copy this repo's `.ui-variants/` as a starting point. See [Generators](#generators) for details.
 
 ## Usage
 
