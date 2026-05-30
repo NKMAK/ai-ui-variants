@@ -28,17 +28,17 @@
      { id: "claude-opus-4-8", label: "Opus 4.8", description: "most capable" },
      { id: "claude-sonnet-4-6", label: "Sonnet 4.6", description: "balanced" },
      {
-       id: "claude-haiku-4-5-20251001",
+       id: "claude-haiku-4-5",
        label: "Haiku 4.5",
        description: "fast / low-cost",
      },
    ];
 
    // ファイル設定・env いずれも無いときの組み込み既定。
-   export const DEFAULT_MODEL = "claude-haiku-4-5-20251001";
+   export const DEFAULT_MODEL = "claude-haiku-4-5";
    ```
 2. `claude-code.ts` 冒頭で `import { DEFAULT_MODEL } from "../../shared/models.ts";` を追加する。
-3. `claude-code.ts` のローカル定数 `const DEFAULT_CLAUDE_MODEL = "claude-haiku-4-5-20251001";`（前段の未コミット変更で更新済み）を削除する。
+3. `claude-code.ts` のローカル定数 `const DEFAULT_CLAUDE_MODEL = "claude-haiku-4-5";`（前段の未コミット変更で更新済み）を削除する。
 4. `resolveClaudeModel()` 内の `DEFAULT_CLAUDE_MODEL` 参照を `DEFAULT_MODEL` に置き換える（※フェーズ2で `options.model` を引数に追加するため、ここでは既存シグネチャのまま定数置換だけ行う）。
 
 ## 完了条件

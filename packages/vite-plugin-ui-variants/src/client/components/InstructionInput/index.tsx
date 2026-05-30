@@ -74,8 +74,8 @@ export function InstructionInput() {
           setModel(event.currentTarget.value);
         }}
       >
-        <option value="">Default (claude-haiku-4-5-20251001)</option>
-        <option value="claude-haiku-4-5-20251001">claude-haiku-4-5 (fast / low-cost)</option>
+        <option value="">Default (claude-haiku-4-5)</option>
+        <option value="claude-haiku-4-5">claude-haiku-4-5 (fast / low-cost)</option>
         <option value="claude-sonnet-4-6">claude-sonnet-4-6 (balanced)</option>
         <option value="claude-opus-4-8">claude-opus-4-8 (most capable)</option>
       </select>

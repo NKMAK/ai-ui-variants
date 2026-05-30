@@ -17,7 +17,7 @@ vite.config のプラグインオプション（= ファイル設定 `uiVariants
 本計画の前段として以下が未コミットで存在する。各フェーズで shared 一本化へ畳み込むこと。
 
 - `client/components/InstructionInput/index.tsx`: ドロップダウン option を最新モデルへ手書き更新済み。→ **フェーズ3で `availableModels` 動的描画に置き換える**。
-- `server/generator/claude-code.ts`: `DEFAULT_CLAUDE_MODEL = "claude-haiku-4-5-20251001"` に更新済み。→ **フェーズ1/2で shared の `DEFAULT_MODEL` import に置き換え、ローカル定数を廃止する**。
+- `server/generator/claude-code.ts`: `DEFAULT_CLAUDE_MODEL = "claude-haiku-4-5"` に更新済み。→ **フェーズ1/2で shared の `DEFAULT_MODEL` import に置き換え、ローカル定数を廃止する**。
 
 ## 参照ドキュメント
 

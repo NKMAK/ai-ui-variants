@@ -15,7 +15,7 @@ import type {
 
 const CLAUDE_TIMEOUT_MS = 180_000;
 const CLAUDE_MAX_BUFFER = 1024 * 1024 * 10;
-const DEFAULT_CLAUDE_MODEL = "claude-haiku-4-5-20251001";
+const DEFAULT_CLAUDE_MODEL = "claude-haiku-4-5";
 const CLAUDE_MODEL_ENV = "UI_VARIANTS_CLAUDE_MODEL";
 
 type ClaudeCodeGeneratorOptions = {

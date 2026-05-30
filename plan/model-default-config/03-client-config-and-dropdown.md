@@ -59,7 +59,7 @@
 ## 完了条件
 
 - [ ] オーバーレイ表示時に `/config` が取得され、ドロップダウンが `availableModels` から描画される。
-- [ ] 既定 option に解決後の実モデル名（例 `Default (claude-haiku-4-5-20251001)`）が表示される。
+- [ ] 既定 option に解決後の実モデル名（例 `Default (claude-haiku-4-5)`）が表示される。
 - [ ] モデルを選んで Generate でき、`model` がリクエストに乗る（既存 `selectedModel` 経路）。
 - [ ] `pnpm --filter vite-plugin-ui-variants exec tsc --noEmit` と `pnpm lint` が成功する。
 
