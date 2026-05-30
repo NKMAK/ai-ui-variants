@@ -154,6 +154,7 @@ export function extractCodeRange(
     file: repoRelFile,
     startLine,
     endLine,
+    selectedLine: line,
     content: selectedLines.join("\n"),
   };
 }

@@ -4,6 +4,7 @@ export type CodeRange = {
   file: string;
   startLine: number;
   endLine: number;
+  selectedLine: number;
   content: string;
 };
 

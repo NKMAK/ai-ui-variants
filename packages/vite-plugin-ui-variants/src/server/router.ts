@@ -390,11 +390,17 @@ async function discardSession(
   sessionId: string,
 ): Promise<Session> {
   return withSessionLock(context, sessionId, (state) => {
-    restoreSessionSnapshot(context, state);
-    state.session.status = "discarded";
-    persistSession(context.repoRoot, state.session);
-    removeWorktrees(context.repoRoot, sessionId);
-    releaseSession(sessionId);
+    try {
+      restoreSessionSnapshot(context, state);
+      state.session.status = "discarded";
+      persistSession(context.repoRoot, state.session);
+    } finally {
+      try {
+        removeWorktrees(context.repoRoot, sessionId);
+      } finally {
+        releaseSession(sessionId);
+      }
+    }
 
     return state.session;
   });
