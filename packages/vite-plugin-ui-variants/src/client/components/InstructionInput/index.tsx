@@ -79,7 +79,13 @@ export function InstructionInput() {
         <option value="claude-sonnet-4-6">claude-sonnet-4-6 (balanced)</option>
         <option value="claude-opus-4-8">claude-opus-4-8 (most capable)</option>
       </select>
-      <div className="instruction-input__actions">
+      <div
+        className={
+          variants.hasVariants
+            ? "instruction-input__actions"
+            : "instruction-input__actions instruction-input__actions--initial"
+        }
+      >
         {variants.hasVariants ? (
           <>
             <Button

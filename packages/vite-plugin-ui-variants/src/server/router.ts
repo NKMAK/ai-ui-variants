@@ -7,6 +7,7 @@ import type { ViteDevServer } from "vite";
 import type {
   ApiErrorResponse,
   ApplyVariantResponse,
+  DiscardActiveSessionResponse,
   DiscardSessionResponse,
   GenerateMode,
   GenerateVariantsRequest,
@@ -195,6 +196,20 @@ async function handleRequest(
       ok: true,
       session,
       appliedVariant: variant,
+    });
+    return;
+  }
+
+  if (
+    method === "POST" &&
+    segments[0] === "session" &&
+    segments[1] === "discard-active" &&
+    segments.length === 2
+  ) {
+    const session = await discardActiveSession(context);
+    sendJson<DiscardActiveSessionResponse>(res, 200, {
+      ok: true,
+      session,
     });
     return;
   }
@@ -439,6 +454,16 @@ async function discardSession(
 
     return state.session;
   });
+}
+
+async function discardActiveSession(context: SessionContext): Promise<Session | null> {
+  const activeSession = getActiveSession();
+
+  if (activeSession === null) {
+    return null;
+  }
+
+  return discardSession(context, activeSession.id);
 }
 
 function getReadyVariant(session: Session, variantId: string): Variant {

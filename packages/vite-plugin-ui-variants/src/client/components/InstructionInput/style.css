@@ -57,3 +57,8 @@
   justify-content: end;
   gap: 8px;
 }
+
+.instruction-input__actions--initial {
+  justify-content: center;
+  margin-bottom: 16px;
+}
