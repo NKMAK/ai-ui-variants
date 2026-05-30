@@ -72,11 +72,58 @@ export function validatePatch(patch: string): PatchValidationResult {
 export function validatePatchTargetRange(
   patch: string,
   targetRange: TargetLineRange,
+  targetFile: string,
+): PatchValidationResult {
+  const normalizedTarget = normalizePath(targetFile);
+
+  // patch をファイル単位に割って、target file のチャンクだけ行範囲を検査する。
+  // チャンク内は単一ファイルなので、`--- a/` `+++ b/` ヘッダは hunk より前
+  // （inHunk=false）に現れ、変更行として誤計上されない。
+  for (const chunk of splitPatchByFile(patch)) {
+    const chunkFile = extractChunkFile(chunk);
+
+    if (chunkFile === undefined || normalizePath(chunkFile) !== normalizedTarget) {
+      continue;
+    }
+
+    const result = validateChunkTargetRange(chunk, targetRange);
+
+    if (!result.ok) {
+      return result;
+    }
+  }
+
+  return { ok: true };
+}
+
+function splitPatchByFile(patch: string): string[] {
+  return patch
+    .split(/\n(?=diff --git )/)
+    .filter((chunk) => chunk.startsWith("diff --git "));
+}
+
+function extractChunkFile(chunk: string): string | undefined {
+  const lines = chunk.split("\n");
+
+  for (const line of lines) {
+    if (line.startsWith("+++ b/")) {
+      return line.slice("+++ b/".length);
+    }
+  }
+
+  const match = /^diff --git a\/(.+) b\/(.+)$/.exec(lines[0] ?? "");
+
+  return match?.[2] ?? match?.[1];
+}
+
+function validateChunkTargetRange(
+  chunk: string,
+  targetRange: TargetLineRange,
 ): PatchValidationResult {
   let oldLine = 0;
   let inHunk = false;
 
-  for (const line of patch.split("\n")) {
+  for (const line of chunk.split("\n")) {
     if (line.startsWith("@@ ")) {
       const match = /^@@ -(\d+)(?:,\d+)? \+\d+(?:,\d+)? @@/.exec(line);
 

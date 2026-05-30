@@ -279,10 +279,14 @@ async function generateVariants(
             continue;
           }
 
-          const targetRangeValidation = validatePatchTargetRange(patch, {
-            startLine: state.codeRange.targetStartLine,
-            endLine: state.codeRange.targetEndLine,
-          });
+          const targetRangeValidation = validatePatchTargetRange(
+            patch,
+            {
+              startLine: state.codeRange.targetStartLine,
+              endLine: state.codeRange.targetEndLine,
+            },
+            state.codeRange.file,
+          );
 
           if (!targetRangeValidation.ok) {
             variant.status = "failed";

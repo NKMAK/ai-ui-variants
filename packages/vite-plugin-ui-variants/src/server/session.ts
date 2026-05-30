@@ -220,6 +220,12 @@ function findTargetElementRange(
     // Fall back to a tight line window if the file is temporarily unparsable.
   }
 
+  // フォールバックは「クリックした要素」とは別物の範囲になりうる（複数行要素では
+  // 末尾を切り落とし兄弟行を含む）ため、想定外として可視化する。
+  console.warn(
+    `[ui-variants] target element not found at ${line}:${column}; falling back to a tight line window.`,
+  );
+
   return {
     startLine: Math.max(1, line - 2),
     endLine: line + 2,
