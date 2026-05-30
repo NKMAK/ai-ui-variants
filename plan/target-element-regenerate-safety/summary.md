@@ -19,7 +19,7 @@
 - generator prompt には code window とは別に target element range を渡し、変更対象をその範囲へ限定する。
 - server 側で生成 patch の変更行を検査し、target element range 外を触る variant は `failed` にする。
 - 既存 variant がある状態では、主ボタンを base から作り直す操作にし、現在案へ追加する操作は副ボタンにする。
-- デモファイルに残った label 側の不要 style は削除し、textarea 側の style だけを残す。
+- デモの `Playground.tsx` の textarea に inline style を持たせ、style を variant で差し替えるクリック対象にする（意図はコメントで明記する）。
 
 ## スコープ外
 
@@ -37,8 +37,10 @@
 
 - [x] `CodeRange` が target element の開始/終了行を持つ。
 - [x] 生成 patch が target element range 外を触った場合に `failed` になる。
-- [x] 既存 variant 後の主操作が base からの作り直しになる。
-- [x] `Playground.tsx` の不要な label style が削除され、textarea のみ対象になる。
+- [x] target range 検査はファイル別にスコープし、target file 以外の hunk を誤って範囲判定しない。
+- [x] target element が見つからずフォールバックした場合に warn を出して可視化する。
+- [x] 既存 variant 後の主操作が base からの作り直しになり、実行中の操作ボタンにスピナーが出る。
+- [x] `Playground.tsx` の textarea に意図を明記した inline style クリック対象がある。
 - [x] `pnpm --filter vite-plugin-ui-variants exec tsc --noEmit` を通す。
 - [x] `pnpm --filter demo-app exec tsc --noEmit` を通す。
 - [x] `git diff --check` を通す。

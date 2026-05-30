@@ -62,7 +62,7 @@ export function InstructionInput() {
               disabled={disabled || !variants.canRegenerate}
               onClick={handleRegenerate}
             >
-              {variants.busy ? <Spinner /> : null}
+              {variants.busyMode === "replace" ? <Spinner /> : null}
               Regenerate
             </Button>
             <Button
@@ -70,6 +70,7 @@ export function InstructionInput() {
               disabled={disabled || !variants.canRefineCurrent}
               onClick={handleRefine}
             >
+              {variants.busyMode === "refine" ? <Spinner /> : null}
               Refine current
             </Button>
           </>

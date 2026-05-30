@@ -2,6 +2,7 @@ import type { GenerateMode, Variant } from "../../shared/types.ts";
 import { postApply, postDiscard, postGenerate, postPreview } from "../api/client.ts";
 import {
   busy,
+  busyMode,
   currentIndex,
   resetVariantState,
   selectedSource,
@@ -17,6 +18,7 @@ export type UseVariantsResult = {
   currentIndex: number;
   currentVariant: Variant | null;
   busy: boolean;
+  busyMode: GenerateMode | null;
   canGoPrev: boolean;
   canGoNext: boolean;
   hasVariants: boolean;
@@ -39,6 +41,7 @@ export function useVariants(): UseVariantsResult {
   const variantList = variants.value;
   const activeIndex = currentIndex.value;
   const isBusy = busy.value;
+  const activeBusyMode = busyMode.value;
   const activeVariant = variantList[activeIndex] ?? null;
 
   return {
@@ -46,6 +49,7 @@ export function useVariants(): UseVariantsResult {
     currentIndex: activeIndex,
     currentVariant: activeVariant,
     busy: isBusy,
+    busyMode: activeBusyMode,
     canGoPrev: findPreviewableIndex(variantList, activeIndex, -1) !== null,
     canGoNext: findPreviewableIndex(variantList, activeIndex, 1) !== null,
     hasVariants: variantList.length > 0,
@@ -96,25 +100,31 @@ async function generate(
     return;
   }
 
-  await runExclusive(async () => {
-    const response = await postGenerate(activeSessionId, instruction, count, mode);
+  busyMode.value = mode;
 
-    if (!response.ok) {
-      sessionError.value = response.error;
-      return;
-    }
+  try {
+    await runExclusive(async () => {
+      const response = await postGenerate(activeSessionId, instruction, count, mode);
 
-    syncVariants(response.variants, response.session.currentIndex);
+      if (!response.ok) {
+        sessionError.value = response.error;
+        return;
+      }
 
-    const firstReadyVariant = response.variants.find(isPreviewable);
+      syncVariants(response.variants, response.session.currentIndex);
 
-    if (firstReadyVariant === undefined) {
-      sessionError.value = "No previewable variants were generated.";
-      return;
-    }
+      const firstReadyVariant = response.variants.find(isPreviewable);
 
-    await previewUnlocked(activeSessionId, firstReadyVariant.id);
-  });
+      if (firstReadyVariant === undefined) {
+        sessionError.value = "No previewable variants were generated.";
+        return;
+      }
+
+      await previewUnlocked(activeSessionId, firstReadyVariant.id);
+    });
+  } finally {
+    busyMode.value = null;
+  }
 }
 
 async function goPrev(): Promise<void> {
