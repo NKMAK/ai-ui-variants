@@ -6,14 +6,12 @@ export function Hero() {
       <div className="hero-text">
         <p className="eyebrow">// vite plugin · click → describe → pick</p>
         <h1 className="hero-title">
-          Point at any UI element, say what to change, then{" "}
-          <em>compare three AI rewrites</em> and keep the one that fits — without leaving
-          your app.
+          Click a UI element. <em>Get three AI rewrites.</em>
         </h1>
         <p className="hero-sub">
-          Each variant is a real code change, applied via Fast Refresh. No mockups, no
-          second window — your URL, auth, and form state stay put while you compare. Other
-          click-to-source tools jump you to the editor; this one rewrites, in place.
+          Say what to change, compare the variants in place, and keep the one that fits —
+          without leaving the app you are already running. Your URL, auth, and form state
+          stay put.
         </p>
         <div className="hero-ctas">
           <a className="cta cta-primary" href="#playground">
