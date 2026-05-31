@@ -1,16 +1,16 @@
-# ai-ui-variants
+# claude-ui-variants
 
-> Click a UI element, let AI generate multiple code-change variants, and preview them live — right on the screen you're looking at.
+> Click a UI element, let Claude generate multiple code-change variants, and preview them live — right on the screen you're looking at.
 
-`ai-ui-variants` is an experimental [Vite](https://vitejs.dev/) plugin that turns "tweak this button / heading / card" into a tight loop:
+`claude-ui-variants` is an experimental [Vite](https://vitejs.dev/) plugin that turns "tweak this button / heading / card" into a tight loop:
 
 1. **Click** a rendered element in your running app.
 2. The plugin resolves it back to the exact source location.
-3. AI generates several variants (`Variant A / B / C`) over a minimal slice of code.
+3. Claude generates several variants (`Variant A / B / C`) over a minimal slice of code.
 4. **Preview** each variant live via HMR and step through them with _prev / next_.
 5. **Apply** the one you like to your working tree — discard the rest.
 
-The AI never writes diffs. It returns the changed code (as search/replace blocks); the server turns that into a patch deterministically with `git diff`, so changes apply cleanly to your real tree.
+Claude never writes diffs. It returns the changed code (as search/replace blocks); the server turns that into a patch deterministically with `git diff`, so changes apply cleanly to your real tree.
 
 > **Status:** MVP / experimental. APIs and behavior may change.
 
@@ -21,7 +21,7 @@ https://github.com/user-attachments/assets/c611c584-8342-41a0-9366-16d5588960c2
 
 A public landing page (display only — the local agent overlay does not run there) is published via GitHub Pages:
 
-👉 **https://nkmak.github.io/ai-ui-variants/**
+👉 **https://nkmak.github.io/claude-ui-variants/**
 
 To try the editable overlay, run the demo app locally (see [Quick start](#quick-start)).
 
@@ -70,8 +70,8 @@ For the demo in this repo you'll also need [pnpm](https://pnpm.io/) (the monorep
 ### 1. Clone and install
 
 ```bash
-git clone https://github.com/NKMAK/ai-ui-variants.git
-cd ai-ui-variants
+git clone https://github.com/NKMAK/claude-ui-variants.git
+cd claude-ui-variants
 pnpm install
 ```
 
@@ -103,7 +103,7 @@ For an app outside the monorepo, point at a local path (or a git URL) instead:
 ```jsonc
 {
   "dependencies": {
-    "vite-plugin-ui-variants": "file:../ai-ui-variants/packages/vite-plugin-ui-variants",
+    "vite-plugin-ui-variants": "file:../claude-ui-variants/packages/vite-plugin-ui-variants",
   },
 }
 ```
