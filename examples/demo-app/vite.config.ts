@@ -7,7 +7,7 @@ const isPages = process.env.GITHUB_PAGES === "true";
 const tailwindPlugin = tailwindcss() as unknown as PluginOption[];
 
 export default defineConfig({
-  base: isPages ? "/ai-ui-variants/" : "/",
+  base: isPages ? "/claude-ui-variants/" : "/",
   plugins: [
     uiVariants({
       generator: "claude-code",

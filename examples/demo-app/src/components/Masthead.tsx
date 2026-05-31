@@ -5,7 +5,7 @@ export function Masthead() {
         <span className="brand-mark" aria-hidden>
           V
         </span>
-        <span className="brand-name">ai-ui-variants</span>
+        <span className="brand-name">claude-ui-variants</span>
       </div>
       <nav className="nav-list" aria-label="Primary">
         <a href="#workflow">workflow</a>
@@ -15,7 +15,7 @@ export function Masthead() {
       </nav>
       <div className="masthead-right">
         <span className="chip">v0.1 · MVP</span>
-        <a className="ghost-cta" href="https://github.com/NKMAK/ai-ui-variants">
+        <a className="ghost-cta" href="https://github.com/NKMAK/claude-ui-variants">
           GitHub →
         </a>
       </div>

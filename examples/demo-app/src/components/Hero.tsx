@@ -6,7 +6,7 @@ export function Hero() {
       <div className="hero-text">
         <p className="eyebrow">// vite plugin · click → instruct → compare → apply</p>
         <h1 className="hero-title">
-          Instruct AI in your browser. <em>Compare UI variants in place.</em>
+          Instruct Claude in your browser. <em>Compare UI variants in place.</em>
         </h1>
         <p className="hero-sub">
           Click a rendered element, tell the AI what to change, and flip through
@@ -22,7 +22,7 @@ export function Hero() {
           </a>
           <a
             className="cta cta-ghost"
-            href="https://github.com/NKMAK/ai-ui-variants#readme"
+            href="https://github.com/NKMAK/claude-ui-variants#readme"
           >
             Read the docs
           </a>

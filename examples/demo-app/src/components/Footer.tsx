@@ -8,7 +8,7 @@ export function Footer() {
         
       </span>
       <p className="footer-meta">
-        ai-ui-variants
+        claude-ui-variants
         <br />
         MIT · 2026
       </p>
